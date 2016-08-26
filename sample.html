@@ -14,7 +14,7 @@
   <body>
 
     <h2> Firebase database sample app </h2>
-    <p> firebase db url (set to public access) : https://www.gstatic.com/firebasejs/3.3.0/firebase.js </p>
+    <p> firebase db url set to public access </p>
     <br><br><br>
 
     <div class="row">
@@ -71,26 +71,34 @@
       firebase.database().ref('record/' + id).remove();
     }
 
+    function detachListeners() {
+      return firebase.database().ref('/record/').off();
+    }
+
     function retrieveUserData(callback) {
-      return firebase.database().ref('/record/').once('value').then(function(snapshot) {
-        debugLog("retrieveUserData()");
+      detachListeners();
+      return firebase.database().ref('/record/').on('value', function(snapshot) {
+        debugLog("listening to /record");
         var result = snapshot.val();
-        console.log(result);
         callback(result);
         // ...
       });
     }
 
     function searchUserData(query, callback) {
-      return firebase.database().ref('/record').orderByChild("name").startAt(query).endAt(query).once('value').then(function(snapshot) {
+      detachListeners();
+      return firebase.database().ref('/record').orderByChild("name").startAt(query).endAt(query).on('value', function(snapshot) {
         debugLog("searchUserData('"+query+"')");
         var result = snapshot.val();
-        console.log(result);
         callback(result);
       });
     }
 
     function displayUserData(data) {
+      if (!data) {
+        $("#record_list").html("");
+        return;
+      }
       console.log(data);
       var innerHTML = "";
       $.each(data, function(key,val){
