@@ -1,0 +1,58 @@
+<!doctype html>
+<html ng-app="myModule">
+  <head>
+    <title>
+      firebase sample
+    </title>
+    <!--external dependencies-->
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet"  href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="angular.min.js"></script>
+    <script src="angularfire.min.js"></script>
+    <!--internal scripts-->
+    <script src="runtimeLogger.js"></script>
+    <script src="firebaseController.js"></script>
+  </head>
+
+  <body>
+    <h2> Firebase database sample app </h2>
+
+    <div style="overflow:hidden;" ng-controller="databaseViewController"> <!--directive-->
+      Search:<input type="text" ng-model="searchName"><br><br>
+      <div class="col-md-6" id="record_list" style="border-style:solid;">
+        <table>
+          <thead>
+            <tr>
+              <th>key </th>
+              <th>name </th>
+              <th>score </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="node in data | filter:search">
+              <td>{{node.key}} </td>
+              <td>| {{node.name}} </td>
+              <td>| {{node.score}} </td>
+              <td>
+                <input type="button" value="delete" ng-click="removeNode(node)"></input>
+              </td>
+            </td>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br><br>
+
+    <div ng-controller="databaseSubmitController">  <!--directive-->
+      <label>Name</label>
+      <input type="text" ng-model="name">
+      <label>Score</label>
+      <input type="text" ng-model="score">
+      <br>
+      <input type="button" value="add record" ng-click="submitRecord()"></input>
+    </div>
+  </body>
+
+</html>
