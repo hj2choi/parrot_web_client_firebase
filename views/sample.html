@@ -1,0 +1,135 @@
+<html>
+
+  <head>
+    <title>
+      firebase sample
+    </title>
+
+    <!--dependencies-->
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet"  href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <h2> Firebase database sample app </h2>
+    <p> firebase db url set to public access </p>
+    <br><br><br>
+
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn btn-primary" id="btn_refresh">Refresh entire list</button>
+        <br>
+        <br>
+        <input type="text" class="form-control" id="input_search">
+        <button class="btn btn-primary" id="btn_search">Search name</button>
+      </div>
+    </div>
+    <br><br>
+
+    <div class="row">
+      <div class="col-md-6" id="record_list" style="border-style:solid;">
+      </div>
+    </div>
+    <br><br><br>
+
+
+
+    <div class="col-md-4">
+      <label>Name</label>
+      <input type="text" class="form-control" id="input_name">
+      <label for="pwd">Score</label>
+      <input type="text" class="form-control" id="input_score">
+      <br>
+      <button class="btn btn-primary" id="submit_record">Add record</button>
+    </div>
+
+
+  </body>
+
+
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyC3f8DCf6hI8Pj6abPDEtGc2k8x-OPtJE4",
+      authDomain: "sample-2fee0.firebaseapp.com",
+      databaseURL: "https://sample-2fee0.firebaseio.com",
+      storageBucket: "sample-2fee0.appspot.com",
+    };
+    firebase.initializeApp(config);
+
+    function addRecord(input_name, input_score) {
+      firebase.database().ref('record/').push({
+        name: input_name,
+        score: input_score
+      });
+    }
+
+    function removeRecord(id) {
+      firebase.database().ref('record/' + id).remove();
+    }
+
+    function detachListeners() {
+      return firebase.database().ref('/record/').off();
+    }
+
+    function retrieveUserData(callback) {
+      detachListeners();
+      return firebase.database().ref('/record/').on('value', function(snapshot) {
+        var result = snapshot.val();
+        callback(result);
+        // ...
+      });
+    }
+
+    function searchUserData(query, callback) {
+      detachListeners();
+      return firebase.database().ref('/record').orderByChild("name").startAt(query).endAt(query).on('value', function(snapshot) {
+        var result = snapshot.val();
+        callback(result);
+      });
+    }
+
+    function displayUserData(data) {
+      if (!data) {
+        $("#record_list").html("");
+        return;
+      }
+      console.log(data);
+      var innerHTML = "";
+      $.each(data, function(key,val){
+          console.log(val);
+          innerHTML += "<span><b>"+key+"=></b> {name:<i>"+val.name+"</i>, score:<i>"+val.score+"</i>} </span>" +
+                        "<button id=\"btn_remove\" onclick=\"removeRecord('"+key+"')\">remove</button><br><br>";
+      });
+      $("#record_list").html(innerHTML);
+
+    }
+
+
+    //console.log("writeUserData()");
+    //writeUserData(1, "hongjoon", "hjchoi@ust.hk", "www.google.com");
+    //deleteUserData(1)
+    retrieveUserData(displayUserData);
+
+    $("document").ready(function(){
+      $("#submit_record").click(function() {
+        var input_name = $("#input_name").val();
+        var input_score = $("#input_score").val();
+
+        addRecord(input_name, input_score);
+      });
+
+      $("#btn_refresh").click(function() {
+        retrieveUserData(displayUserData);
+      });
+
+      $("#btn_search").click(function() {
+        var input_search = $("#input_search").val();
+        searchUserData(input_search, displayUserData);
+      });
+
+     });
+
+  </script>
+</html>
