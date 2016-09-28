@@ -1,9 +1,13 @@
 // Initialize Firebase config
 var config = {
-  apiKey: "AIzaSyC3f8DCf6hI8Pj6abPDEtGc2k8x-OPtJE4",
-  authDomain: "sample-2fee0.firebaseapp.com",
-  databaseURL: "https://sample-2fee0.firebaseio.com",
-  storageBucket: "sample-2fee0.appspot.com",
+  // apiKey: "AIzaSyC3f8DCf6hI8Pj6abPDEtGc2k8x-OPtJE4",
+  // authDomain: "sample-2fee0.firebaseapp.com",
+  // databaseURL: "https://sample-2fee0.firebaseio.com",
+  // storageBucket: "sample-2fee0.appspot.com",
+  apiKey: "AIzaSyCN4VE64n2J8MvaaN1xpaRLN8G9dNXhQZI",
+  authDomain: "alexa-parrot.firebaseapp.com",
+  databaseURL: "https://alexa-parrot.firebaseio.com",
+  storageBucket: "alexa-parrot.appspot.com"
 };
 
 function addRecord(input_name, input_score) {
@@ -21,7 +25,7 @@ function removeRecord(id) {
 
 
 var databaseViewController = function($scope, $firebaseObject) {
-  var ref = new Firebase(config.databaseURL+"/record");
+  var ref = new Firebase(config.databaseURL+"/DB/sentences");
   var firebaseObj = $firebaseObject(ref);
 
   // For three-way data bindings, use bind()

@@ -32,8 +32,8 @@
           </thead>
           <tbody>
             <tr ng-repeat="node in data | filter:search">
-              <td>{{node.key}} </td>
-              <td>| {{node.name}} </td>
+              <td>{{node.id}} </td>
+              <td>| {{node.sentence}} </td>
               <td>| {{node.score}} </td>
               <td>
                 <input type="button" value="delete" ng-click="removeNode(node)"></input>
