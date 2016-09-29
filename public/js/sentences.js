@@ -83,7 +83,7 @@ var databaseViewController = function($scope, $firebaseObject) {
     if (!$scope.searchValue) {
       return true;
     }
-    var sentenceFlag = $scope.searchValue.length>1 || item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
+    var sentenceFlag = $scope.searchValue.length>1 && item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
     var idFlag = item.key.toLowerCase() == ($scope.searchValue.toLowerCase());
     var levelFlag = (""+item.level).toLowerCase() == ($scope.searchValue.toLowerCase());
 
