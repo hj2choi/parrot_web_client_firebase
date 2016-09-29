@@ -20,7 +20,7 @@ var dataLoad = 1;
 function addSentence(input_level, input_sentence) {
   liveLog("addSentence ('"+input_level+"', '"+input_sentence+"')");
   // input validation
-  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0) && parseInt(input_level)<10) {
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<10)) {
     return -1;
   }
   if (!input_sentence) {
@@ -40,7 +40,7 @@ function addSentence(input_level, input_sentence) {
 function updateSentence(key, input_level, input_sentence) {
   liveLog("update sentence["+key+"] with ("+input_level+", "+input_sentence+")");
   // input validation
-  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0) && parseInt(input_level)<10) {
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<10)) {
     return -1;
   }
   if (!input_sentence) {
