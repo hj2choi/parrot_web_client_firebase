@@ -41,7 +41,7 @@ function createConsoleBoxStyle() {
                     "border-width: 2px;" +
                     "margin-top:50px;" +
                     "right:50px;" +
-                    "height: "+(12*MAX_LOG_LENGTH+50)+"px;" +
+                    "height: "+(11*MAX_LOG_LENGTH+50)+"px;" +
                     "width: "+(CHAR_WIDTH*MAX_MESSAGE_LENGTH+HORIZONTAL_OFFSET)+"px;" +
                     "display: inline-block;" +
                     "transition: opacity .35s ease-in-out; }";

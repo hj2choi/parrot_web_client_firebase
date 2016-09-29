@@ -27,5 +27,13 @@ app.set('view engine', 'ejs');
 ///////////////////////////////////////////
 app.get('/', function(request, res) {
   console.log("get /");
-  res.sendFile(path.join(__dirname+'/views/angularSample.html'));
+  res.sendFile(path.join(__dirname+'/views/index.html'));
+});
+app.get('/index.html', function(request, res) {
+  console.log("get /");
+  res.sendFile(path.join(__dirname+'/views/index.html'));
+});
+app.get('/sentences.html', function(request, res) {
+  console.log("get /");
+  res.sendFile(path.join(__dirname+'/views/sentences.html'));
 });

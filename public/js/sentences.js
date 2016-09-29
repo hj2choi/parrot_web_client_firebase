@@ -20,7 +20,7 @@ var dataLoad = 1;
 function addSentence(input_level, input_sentence) {
   liveLog("addSentence ('"+input_level+"', '"+input_sentence+"')");
   // input validation
-  if (isNaN(input_level) || !(parseInt(input_level)>0) && parseInt(input_level)<10) {
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0) && parseInt(input_level)<10) {
     return -1;
   }
   if (!input_sentence) {
@@ -40,7 +40,7 @@ function addSentence(input_level, input_sentence) {
 function updateSentence(key, input_level, input_sentence) {
   liveLog("update sentence["+key+"] with ("+input_level+", "+input_sentence+")");
   // input validation
-  if (isNaN(input_level) || !(parseInt(input_level)>0) && parseInt(input_level)<10) {
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0) && parseInt(input_level)<10) {
     return -1;
   }
   if (!input_sentence) {
@@ -113,12 +113,6 @@ var sentenceSubmitController = function($scope) {
   }
 }
 
-firebase.initializeApp(config);
-var myApp = angular.module("myModule", ["firebase"])
-                  .controller("databaseViewController", databaseViewController)
-                  .controller("sentenceSubmitController", sentenceSubmitController);
-
-
 function loadMsg () {
   var msgHTML = "";
   for (var i=0; i<dataLoad%4; ++i)
@@ -132,3 +126,9 @@ function loadMsg () {
   setTimeout(loadMsg, 200);
 }
 setTimeout(loadMsg, 200);
+
+
+firebase.initializeApp(config);
+var myApp = angular.module("myModule", ["firebase"])
+                  .controller("databaseViewController", databaseViewController)
+                  .controller("sentenceSubmitController", sentenceSubmitController);
