@@ -1,8 +1,9 @@
 /**
  *
  * @summary     Runtime Logger
- * @description import this script in html
- *              call liveLog(string) function
+ * @description - this script was created to make debugging process easier
+ *              - import this script in html
+ *              - call liveLog(string) function
  * @version     1.0.0
  * @file        runtimeLogger.js
  * @author      CHOI, Hong Joon (hongjoonchoi95@gmail.com)
@@ -15,7 +16,7 @@
 
 var ENABLE_LOG = true;
 
-var MAX_LOG_LENGTH = 10;
+var MAX_LOG_LENGTH = 15;
 var MAX_MESSAGE_LENGTH = 80;
 var AUTOHIDE_IN_MILLIS = 5000;
 
@@ -31,7 +32,7 @@ function createConsoleBoxStyle() {
   var style = document.createElement("style");
   style.type = "text/css";
   style.innerHTML = ".debugConsoleDiv { " +
-                    "pointer-events: none; " +
+                    "pointer-events: none; " + // old browsers don't support this
                     "position: fixed; " +
                     "z-index: 999999;" +
                     "background-color: rgba(0,0,0,0.6); " +

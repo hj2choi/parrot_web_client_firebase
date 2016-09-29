@@ -15,37 +15,54 @@ var config = {
 //   storageBucket: "alexa-parrot.appspot.com"
 // };
 
-function addRecord(input_level, input_sentence) {
+var dataLoad = 1;
+
+function addSentence(input_level, input_sentence) {
   liveLog("addSentence ('"+input_level+"', '"+input_sentence+"')");
+  // input validation
+  if (isNaN(input_level) || (parseInt(input_level)<1) || parseInt(input_level)>9) {
+    return -1;
+  }
+
   firebase.database().ref('/DB/sentences').push({
     level: input_level,
     sentence: input_sentence,
-    used: 3,
+    used: 0,
     correct:0,
     accuracy:0
   });
+  return 0;
 }
 
-function updateRecord(key, input_level, input_sentence) {
+function updateSentence(key, input_level, input_sentence) {
   liveLog("update sentence["+key+"] with ("+input_level+", "+input_sentence+")");
+  // input validation
+  if (isNaN(input_level) || (parseInt(input_level)<1) || parseInt(input_level)>9) {
+    return -1;
+  }
+
   firebase.database().ref('/DB/sentences/'+key).update({
     level: input_level,
     sentence: input_sentence
   });
+  return 0;
 }
 
-function removeRecord (key) {
-  liveLog("removeSentence ('"+key+"')");
-  firebase.database().ref('/DB/sentences/' + key).remove();
+function removeSentence (key) {
+  if (confirm("delte sentence id "+key+"?")) {
+    liveLog("removeSentence ('"+key+"')");
+    firebase.database().ref('/DB/sentences/' + key).remove();
+  }
 }
-
 
 var databaseViewController = function($scope, $firebaseObject) {
+  liveLog("pulling data from firebase");
   var ref = new Firebase(config.databaseURL+"/DB/sentences");
   var firebaseObj = $firebaseObject(ref);
 
   // For three-way data bindings, use bind()
   firebaseObj.$watch(function() {
+    dataLoad=-5; // signals the completion of load
     liveLog("watching for data change");
     var nodes = new Array();
     angular.forEach(firebaseObj, function(value, key) {
@@ -71,28 +88,41 @@ var databaseViewController = function($scope, $firebaseObject) {
   }
 
   $scope.update = function(node, level, sentence) {
-    updateRecord(node.key, level, sentence);
+    if (updateSentence(node.key, level, sentence)) {
+      liveLog("updateSentence(): failed to validate input.");
+    }
   }
 
   $scope.remove = function(node) {
-    if (confirm("delte sentence id "+node.key+"?")) {
-      removeRecord(node.key);
-    }
+    removeSentence(node.key);
   }
 }
 
 var sentenceSubmitController = function($scope) {
-  $scope.submitRecord = function() {
-    addRecord($scope.level, $scope.sentence);
+  $scope.submitSentence = function() {
+    if (addSentence($scope.level, $scope.sentence)) {
+      liveLog("addSentence(): failed to validate input.");
+    }
+
   }
 }
-
 
 firebase.initializeApp(config);
 var myApp = angular.module("myModule", ["firebase"])
                   .controller("databaseViewController", databaseViewController)
                   .controller("sentenceSubmitController", sentenceSubmitController);
 
-$(document).ready(function() {
-  //$('#example').dataTable();
-} );
+
+function loadMsg () {
+  var msgHTML = "";
+  for (var i=0; i<dataLoad%4; ++i)
+    msgHTML+="..";
+  dataLoad++;
+  $("#loadMsg").html(msgHTML+"");
+  if (dataLoad < 0) {
+    $("#loadMsg").html("");
+    return;
+  }
+  setTimeout(loadMsg, 200);
+}
+setTimeout(loadMsg, 200);
