@@ -85,6 +85,71 @@
 		  <div class="col-md-10">
 
         <div class="row">
+          <div class="content-box-header">
+            <div class="panel-title">Sentences DataTable <b><span style="color:orange;" id="loadMsg"></span></b></div>
+          </div>
+    			<div class="content-box-large" ng-controller="databaseViewController">
+    				<div class="panel-body">
+
+              <div>
+                Search (level, sentence) <input type="text" ng-model="searchValue">
+                Level
+                <select ng-model="levelValue" ng-change="onLevelChange()">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                </select>
+              </div>
+
+              <br>
+
+    					<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+    						<thead>
+    							<tr>
+    								<th>Level</th>
+    								<th width="50%">Sentence</th>
+    								<th>used</th>
+    								<th>correct</th>
+    								<th>accuracy</th>
+                    <th></th>
+    							</tr>
+    						</thead>
+    						<tbody>
+                  <tr ng-controller="sentenceSubmitController">
+    								<td><input style="width:35px;" type="text" ng-model="level"></input></td>
+    								<td><input style="width:100%;" type="text" ng-model="sentence"></input></td>
+    								<td class="center"></td>
+    								<td class="center"></td>
+                    <td class="center"></td>
+                    <td>
+                      <button type="submit" class="btn btn-primary" ng-click="submitSentence(this)">add new</button>
+                    </td>
+    							</tr>
+    							<tr ng-repeat="(key, node) in data | filter:filterByString">
+    								<td><input style="width:35px;" type="text" ng-model="node.level" value={{node.level}} ng-change="update(node, node.level, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
+    								<td><input style="width:100%;" type="text" ng-model="node.sentence" value={{node.sentence}} ng-change="update(node, node.level, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
+    								<td class="center">{{node.used}}</td>
+    								<td class="center">{{node.correct}}</td>
+                    <td class="center">{{(node.accuracy*100)+"%"}}</td>
+                    <td class="center">
+                      <!--<button ng-click="update(node, node.level, node.sentence)">update</button>
+                      <span style="margin-left:15px;"></span>-->
+                      <button style="background-color:red;color:white;" ng-click="remove(node)">X</button>
+                    </td>
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+          </div>
+        </div>
+
+        <div class="row">
           <div class="content-box-large box-with-header">
             <fieldset>
               <div class="form-group">
@@ -101,68 +166,6 @@
           </div>
         </div>
 
-
-
-        <div class="row" ng-controller="sentenceSubmitController">
-          <div class="content-box-header">
-            <div class="panel-title">Add sentence</div>
-          </div>
-          <div class="content-box-large box-with-header">
-            <form class="form-inline" role="form">
-              <fieldset>
-                <div class="form-group col-sm-2">
-                  <input type="text" class="form-control" placeholder="Level" ng-model="level">
-                </div>
-                <div class="form-group  col-sm-6">
-                  <input type="text" class="form-control" placeholder="Sentence" ng-model="sentence">
-                </div>
-                <button type="submit" class="btn btn-primary" ng-click="submitSentence(this)">
-                  Add Sentence
-                </button>
-              </fieldset>
-            </form>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="content-box-header">
-            <div class="panel-title">Sentences DataTable <b><span style="color:orange;" id="loadMsg"></span></b></div>
-          </div>
-    			<div class="content-box-large" ng-controller="databaseViewController">
-    				<div class="panel-body">
-              Search (level, sentence) <input type="text" ng-model="searchValue"><br><br>
-    					<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
-    						<thead>
-    							<tr>
-                    <th>id</th>
-    								<th>Level</th>
-    								<th width="55%">Sentence</th>
-    								<th>used</th>
-    								<th>correct</th>
-    								<th>accuracy</th>
-                    <th></th>
-    							</tr>
-    						</thead>
-    						<tbody>
-    							<tr ng-repeat="(key, node) in data | filter:search">
-    								<td>{{node.key}} </td>
-    								<td><input style="width:35px;" type="text" ng-model="node.level" value={{node.level}}></input></td>
-    								<td><input style="width:100%;" type="text" ng-model="node.sentence" value={{node.sentence}}></input></td>
-    								<td class="center">{{node.used}}</td>
-    								<td class="center">{{node.correct}}</td>
-                    <td class="center">{{(node.accuracy*100)+"%"}}</td>
-                    <td>
-                      <button ng-click="update(node, node.level, node.sentence)">update</button>
-                      <span style="margin-left:15px;"></span>
-                      <button style="background-color:red;color:white;" ng-click="remove(node)">X</button>
-                    </td>
-    							</tr>
-    						</tbody>
-    					</table>
-    				</div>
-          </div>
-        </div>
-
 		  </div>
 		</div>
     </div>
@@ -171,7 +174,7 @@
        <div class="container">
 
           <div class="copy text-center">
-             
+
           </div>
 
        </div>

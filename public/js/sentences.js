@@ -1,4 +1,4 @@
-// Initialize Firebase config
+// // Initialize Firebase config
 var config = {
   apiKey: "AIzaSyC5-ireu5x6zNiaLUyZyId2kJ5Chge7dDs",
   authDomain: "parrot-db.firebaseapp.com",
@@ -6,6 +6,14 @@ var config = {
   storageBucket: "parrot-db.appspot.com",
   messagingSenderId: "8731713390"
 };
+
+// Jay's firebase
+// var config = {
+//   apiKey: "AIzaSyCN4VE64n2J8MvaaN1xpaRLN8G9dNXhQZI",
+//   authDomain: "alexa-parrot.firebaseapp.com",
+//   databaseURL: "https://alexa-parrot.firebaseio.com",
+//   storageBucket: "alexa-parrot.appspot.com"
+// };
 
 // Initialize Firebase config
 // var config = {
@@ -16,6 +24,7 @@ var config = {
 // };
 
 var dataLoad = 1;
+var reference_data=[];
 
 function addSentence(input_level, input_sentence) {
   liveLog("addSentence ('"+input_level+"', '"+input_sentence+"')");
@@ -63,9 +72,9 @@ function removeSentence (key) {
 
 var databaseViewController = function($scope, $firebaseObject) {
   liveLog("pulling data from firebase");
+
   var ref = new Firebase(config.databaseURL+"/DB/sentences");
   var firebaseObj = $firebaseObject(ref);
-
   // For three-way data bindings, use bind()
   firebaseObj.$watch(function() {
     dataLoad=-5; // signals the completion of load
@@ -75,11 +84,28 @@ var databaseViewController = function($scope, $firebaseObject) {
       value.key = key;
       nodes.push(value);
     });
-    console.log(nodes);
-    $scope.data = nodes;
+    console.log(reference_data);
+    reference_data = nodes.slice(); // copy by value
+    $scope.data = reference_data;
+    $scope.onLevelChange();
   });
 
-  $scope.search = function(item) {
+  $scope.levelValue = "1";
+  $scope.onLevelChange = function(){
+    liveLog("onLevelChange()");
+    console.log(reference_data);
+    var nodes=reference_data.slice(); // copy by value
+    for (var i=0; i<nodes.length; ++i) {
+      if (nodes[i].level!=$scope.levelValue) {
+        nodes.splice(i,1);
+        --i;
+      }
+    }
+    console.log(nodes);
+    $scope.data = nodes;
+  }
+
+  $scope.filterByString = function(item) {
     if (!$scope.searchValue) {
       return true;
     }
