@@ -237,8 +237,30 @@ var sentenceSubmitController = function($scope) {
 
   }
 
-  $scope.batchUpload = function(input_file) {
-    console.log(input_file);
+  $scope.batchUpload = function() {
+    var file = document.getElementById('inputFile').files[0]
+    var file_reader = new FileReader();
+    //console.log(file_reader);
+    if (file.type!="application/json") {
+      liveLog("ERROR: .json file required! ");
+      return;
+    }
+    file_reader.onload = receivedText;
+    file_reader.readAsText(file);
+    function receivedText(e) {
+      try {
+        lines = e.target.result;
+        var jsonResult = JSON.parse(lines);
+        //console.log(jsonResult);
+        for (var i=0; i<jsonResult.length; ++i) {
+          addSentence(jsonResult[i].level, jsonResult[i].sentence, null);
+        }
+      }
+      catch(err) {
+        liveLog("ERROR: something went wrong reading .json file");
+      }
+
+    }
   }
 }
 
@@ -263,4 +285,4 @@ var myApp = angular.module("myModule", ["firebase"])
                   .controller("databaseViewController", databaseViewController)
                   .controller("sentencesSortController", sentencesSortController)
                   .controller("sentenceSubmitController", sentenceSubmitController)
-                  .filter("sentencesSortFilter", function(){return sentencesSortFilter});
+                  .filter("sentencesSortFilter", function(){return sentencesSortFilter;});

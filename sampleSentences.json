@@ -1,6 +1,6 @@
 [
   {"level":"1", "sentence":"sampleSentences.json"},
-  {"level":"2", "sentence":"sampleSentencesLv2.json"}
+  {"level":"2", "sentence":"sampleSentencesLv2.json"},
   {"level":"3", "sentence":"sampleSentencesLv3.json"}
 
 
