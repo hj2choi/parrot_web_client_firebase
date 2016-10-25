@@ -35,6 +35,24 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+      .clickable { /* Containing div must have a position value */
+          position:relative;
+      }
+      .clickable a {
+          position:absolute;
+          width:100%;
+          height:100%;
+          top:0;
+          left:0;
+          text-decoration:none; /* Makes sure the link   doesn't get underlined */
+          z-index:10; /* raises anchor tag above everything else in div */
+          background-color:white; /*workaround to make clickable in IE */
+          opacity: 0; /*workaround to make clickable in IE */
+          filter: alpha(opacity=1); /*workaround to make clickable in IE */
+      }
+    </style>
   </head>
   <body>
 
@@ -92,7 +110,7 @@
     				<div class="panel-body">
 
               <div>
-                Search (level, sentence) <input type="text" ng-model="searchValue">
+                Search (sentence) <input type="text" ng-model="searchValue">
                 Level
                 <select ng-model="levelValue" ng-change="onLevelChange()">
                   <option value="1">1</option>
@@ -111,12 +129,22 @@
 
     					<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
     						<thead>
-    							<tr>
-    								<th>Level</th>
-    								<th width="50%">Sentence</th>
-    								<th>used</th>
-    								<th>correct</th>
-    								<th>accuracy</th>
+    							<tr ng-controller="sentencesSortController">
+    								<th class="clickable" ng-click="changeSortRule(0)">
+                      <a href=""></a>Level <b style="color:red;">{{sort_arrow_0}}</b>
+                    </th>
+    								<th class="clickable" width="50%" ng-click="changeSortRule(1)">
+                      <a href=""></a>Sentence <b style="color:red;">{{sort_arrow_1}}</b>
+                    </th>
+    								<th class="clickable" ng-click="changeSortRule(2)">
+                      <a href=""></a>used <b style="color:red;">{{sort_arrow_2}}</b>
+                    </th>
+    								<th class="clickable" ng-click="changeSortRule(3)">
+                      <a href=""></a>correct <b style="color:red;">{{sort_arrow_3}}</b>
+                    </th>
+    								<th class="clickable" ng-click="changeSortRule(4)">
+                      <a href=""></a>accuracy <b style="color:red;">{{sort_arrow_4}}</b>
+                    </th>
                     <th></th>
     							</tr>
     						</thead>
@@ -131,7 +159,7 @@
                       <button type="submit" class="btn btn-primary" ng-click="submitSentence(this)">add new</button>
                     </td>
     							</tr>
-    							<tr ng-repeat="(key, node) in data | filter:filterByString">
+    							<tr ng-repeat="(key, node) in data | filter:filterByString | sentencesSortFilter">
     								<td><input style="width:35px;" type="text" ng-model="node.level" value={{node.level}} ng-change="update(node, node.level, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
     								<td><input style="width:100%;" type="text" ng-model="node.sentence" value={{node.sentence}} ng-change="update(node, node.level, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
     								<td class="center">{{node.used}}</td>
@@ -149,16 +177,19 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-controller="sentenceSubmitController">
           <div class="content-box-large box-with-header">
             <fieldset>
               <div class="form-group">
                 <label class="col-md-3 control-label">Batch sentences upload</label>
-                <div class="col-md-9">
-                  <input type="file" class="btn btn-default" id="exampleInputFile1">
+                <div class="col-md-5">
+                  <input type="file" class="btn btn-default" id="inputFile" ng-model="input_file">
                   <p class="help-block">
-                    (TODO) Submit .json or .csv file
+                    Submit .json file
                   </p>
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-primary" id="addSentences" ng-click="batchUpload(input_file)">add sentences</button>
                 </div>
               </div>
 
@@ -181,4 +212,9 @@
     </footer>
 
   </body>
+  <script>
+    $("#addSentences").click(function(){
+      console.log($("#inputFile").val());
+    });
+  </script>
 </html>
