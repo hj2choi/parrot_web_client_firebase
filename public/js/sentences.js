@@ -141,7 +141,7 @@ function pullSentencesDataByLevel(level, $scope, $firebaseObject) {
     unwatch();
   }
   dataLoad=1;
-  setTimeout(loadMsgUI, 0);
+  loadMsgUI();
 
   var ref = new Firebase(config.databaseURL+DB_REF+level);
   var firebaseObj = $firebaseObject(ref);
@@ -277,7 +277,6 @@ function loadMsgUI () {
   }
   setTimeout(loadMsgUI, 200);
 }
-setTimeout(loadMsgUI, 0);
 
 
 firebase.initializeApp(config);
