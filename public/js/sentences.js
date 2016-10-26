@@ -251,9 +251,11 @@ var sentenceSubmitController = function($scope) {
       try {
         lines = e.target.result;
         var jsonResult = JSON.parse(lines);
-        //console.log(jsonResult);
+        console.log(jsonResult);
         for (var i=0; i<jsonResult.length; ++i) {
-          addSentence(jsonResult[i].level, jsonResult[i].sentence, null);
+          if (addSentence(jsonResult[i].level, jsonResult[i].sentence, null)) {
+            liveLog("ERROR: addSentence()");
+          }
         }
       }
       catch(err) {

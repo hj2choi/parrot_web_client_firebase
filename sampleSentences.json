@@ -1,7 +1,7 @@
 [
-  {"level":"1", "sentence":"sampleSentences.json"},
-  {"level":"2", "sentence":"sampleSentencesLv2.json"},
-  {"level":"3", "sentence":"sampleSentencesLv3.json"}
+  {"level":"1", "sentence":"sampleSentences from json"},
+  {"level":"2", "sentence":"sampleSentencesLv2 from json"},
+  {"level":"3", "sentence":"sampleSentencesLv3 from json"}
 
 
 
