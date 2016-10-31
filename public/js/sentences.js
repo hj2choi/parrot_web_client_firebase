@@ -22,10 +22,7 @@ var DB_REF = "/sentences/level/";
 
 
 var unwatch;  // function used to unregister data event listener
-var dataLoad = 1;
-
-var currentLevel=1;
-var reference_data=[];
+var data_load_progress = 1;
 
 var sort_col = 1;
 var sort_ascending_order = true;
@@ -112,24 +109,27 @@ function removeSentence (level, key) {
   }
 }
 
-function parseSentencesData(level, firebaseObj) {
+
+/*
+  parse raw firebaseObj into angularjs-repeat tag consumable array form
+*/
+function parseSentencesData(level_input, firebaseObj) {
   var nodes = new Array();
-  angular.forEach(firebaseObj, function(value, key) {
-    value.key = key;
-    value["level"] = level;
-    nodes.push(value);
+  angular.forEach(firebaseObj, function(level_sentences, level) {
+    console.log(level_sentences);
+    angular.forEach(level_sentences, function(value, k){
+      value.key = k;
+      value["level"] = level;
+      if (level == level_input || level_input=="all") {
+        nodes.push(value);
+      }
+    });
   });
   return nodes;
 }
 
 /*
   pulls sentences data by level and registers new data event listener
-
-  requisite:  Firebase dependency and connection to firebase
-              unwatch as global variable
-              reference_data as global variable
-              dataLoad as global variable
-              liveLog function
 */
 function pullSentencesDataByLevel(level, $scope, $firebaseObject) {
   if (level <1 || level>9) {
@@ -140,44 +140,47 @@ function pullSentencesDataByLevel(level, $scope, $firebaseObject) {
   if (unwatch) {
     unwatch();
   }
-  dataLoad=1;
+  data_load_progress=1;
   loadMsgUI();
 
-  var ref = new Firebase(config.databaseURL+DB_REF+level);
+  var ref = new Firebase(config.databaseURL+DB_REF/*+level*/);
   var firebaseObj = $firebaseObject(ref);
 
   unwatch = firebaseObj.$watch(function() {
-    dataLoad=-5; // signals the completion of load
+    data_load_progress=-5; // signals the completion of load
     liveLog("pulled up-to date data (level "+level+")");
-    console.log(firebaseObj);
-    reference_data = parseSentencesData(level, firebaseObj).slice(); // copy by value
-    $scope.data = reference_data;
+    $scope.data = parseSentencesData(level, firebaseObj).slice(); // copy by value
+    $scope.list_length = $scope.data.length;
   });
 
   return true;
+}
+
+function searchFilter($scope, item){
+  if (!$scope.searchValue) {
+    return true;
+  }
+  var sentenceFlag = item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
+  var levelFlag = (""+item.level).toLowerCase() == ($scope.searchValue.toLowerCase());
+
+  if (levelFlag || sentenceFlag) {
+    return true;
+  }
+  return false;
 }
 
 var databaseViewController = function($scope, $firebaseObject) {
   //liveLog("pulling data from firebase");
   pullSentencesDataByLevel(1, $scope,$firebaseObject);
   $scope.levelValue = "1";
+  $scope.list_length = 0;
 
   $scope.onLevelChange = function(){
-    //liveLog("onLevelChange()");
     pullSentencesDataByLevel($scope.levelValue, $scope,$firebaseObject);
   }
 
   $scope.filterByString = function(item) {
-    if (!$scope.searchValue || $scope.searchValue.length<=1) {
-      return true;
-    }
-    var sentenceFlag = item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
-    var levelFlag = (""+item.level).toLowerCase() == ($scope.searchValue.toLowerCase());
-
-    if (levelFlag || sentenceFlag) {
-      return true;
-    }
-    return false;
+    return searchFilter($scope, item);
   }
 
   $scope.update = function(node, level, sentence) {
@@ -231,17 +234,30 @@ var sentencesSortController = function($scope) {
 
 var sentenceSubmitController = function($scope) {
   $scope.submitSentence = function() {
-    if (addSentence($scope.level, $scope.sentence, null)) {
+    var err = addSentence($scope.level, $scope.sentence, null);
+    if (err == -1) {
       liveLog("addSentence(): failed to validate input.");
+      $scope.level="";
+    } else if (err == -2) {
+      liveLog("addSentence(): failed to validate input.");
+      $scope.sentence="";
+    }
+    else {
+      alert("sentence successfully added: ["+$scope.level+"] "+$scope.sentence);
+      $scope.level="";
+      $scope.sentence="";
     }
 
   }
 
   $scope.batchUpload = function() {
-    var file = document.getElementById('inputFile').files[0]
+    var file = document.getElementById('inputFile').files[0];
     var file_reader = new FileReader();
     //console.log(file_reader);
-    if (file.type!="application/json") {
+    console.log(file.type);
+    if (file.type=="text/plain") {
+     //liveLog("text file detected");
+    } else if (file.type!="application/json") {
       liveLog("ERROR: .json file required! ");
       return;
     }
@@ -267,13 +283,13 @@ var sentenceSubmitController = function($scope) {
 }
 
 function loadMsgUI () {
-  //console.log("loadMsgUI("+dataLoad+")");
+  //console.log("loadMsgUI("+data_load_progress+")");
   var msgHTML = "";
-  for (var i=0; i<dataLoad%4; ++i)
+  for (var i=0; i<data_load_progress%4; ++i)
     msgHTML+="..";
-  dataLoad++;
+  data_load_progress++;
   $("#loadMsg").html(msgHTML+"");
-  if (dataLoad < 0) {
+  if (data_load_progress < 0) {
     $("#loadMsg").html("");
     return;
   }

@@ -122,6 +122,7 @@
                   <option value="7">7</option>
                   <option value="8">8</option>
                   <option value="9">9</option>
+                  <option value="all">all</option>
                 </select>
               </div>
 
@@ -173,6 +174,7 @@
     							</tr>
     						</tbody>
     					</table>
+              <p>showing {{list_length}} items of {{list_length}}</p>
     				</div>
           </div>
         </div>
@@ -185,7 +187,13 @@
                 <div class="col-md-5">
                   <input type="file" class="btn btn-default" id="inputFile">
                   <p class="help-block">
-                    Submit .json file [{level:1,sentence:""}, ...] (compatible with Firefox(Gecko) 3.6(1.9.2), Chrome 7, Internet Explorer* 10, Opera* 12.02, Safari 6.0.2)
+                    Create and submit .json or .txt file<br>
+                    example content of the file:<br>
+                    [<br>
+                    &nbsp;&nbsp;{level:1,sentence:"some sentence"},<br>
+                    &nbsp;&nbsp;{level:7,sentence:"another sentence"},<br>
+                    &nbsp;&nbsp;{level:2,sentence:"blahh"}<br>
+                    ]
                   </p>
                 </div>
                 <div class="col-md-4">
