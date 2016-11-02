@@ -37,3 +37,7 @@ app.get('/sentences.html', function(request, res) {
   console.log("get /");
   res.sendFile(path.join(__dirname+'/views/sentences.html'));
 });
+app.get('/client_index.html', function(request, res) {
+  console.log("get /");
+  res.sendFile(path.join(__dirname+'/views/client_index.html'));
+});

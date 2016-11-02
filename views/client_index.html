@@ -1,0 +1,118 @@
+
+
+<!DOCTYPE html>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <head>
+    <title>Talk in English</title>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<!-- AngularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+
+<!-- Firebase -->
+
+<!-- AngularFire -->
+<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  // TODO: Change this to your info
+  // var config = {
+  //   apiKey: "AIzaSyDLY-N39E8huYEy4GZuDgCQd2aivUbRg4Q",
+  //   authDomain: "talkenglish-c1465.firebaseapp.com",
+  //   databaseURL: "https://talkenglish-c1465.firebaseio.com",
+  //   storageBucket: "talkenglish-c1465.appspot.com",
+  // };
+  // firebase.initializeApp(config);
+</script>
+
+
+<script src="js/app.js"></script>
+  </head>
+<body ng-app="TalkInEnglish" ng-controller="MainCtrl">
+{{loadData("")}}
+<div class="jumbotron">
+<!--  <p>
+    <button class="btn btn-info"
+            ng-click="loadInfo('amzn1_ask_account_AFP3ZWPOS2BGJR7OWJZ3DHPKMOMNWY4AY66FUR7ILBWANIHQN73QHTPZBMVWMNVZHDMMC6XXPEXLEV6NIS6NZ2E673ZIGSDGVYIM6GONZ72SUEC32UT6VA2LYXFDSQBWTMNBJHQDVKGK4HZ5WVIZAN5WXFDMBYLRXRZZM3ZHWR5YMGDP56RXVWURYRVMN4AJRTNPSJS5FHOHWNY')">
+  Login as Sung
+</button>
+    <button class="btn btn-success"
+            ng-click="loadInfo('amzn1_ask_account_AFP3ZWPOS2BGJR7OWJZ3DHPKMOMNWY4AY66FUR7ILBWANIHQN73QGUA3FLLTMOPTVY7GKF4LWTQ6DSSEGIT3YY764PCRFQ6OXTCG6RZM5Q7WXKDJQXEV7FNN4BBDTWZPLMR4AHONQUPV5SIECAQGH2F2QPAKJE2WLKWZLCPE6GC3KM5A7M23ZIBTKUNNLDCRFLAHLA3D4SG6Z5Q')">
+  Login as Dawon
+</button>
+
+
+
+    Say this:</p>-->
+  <!--<font size="1"> &nbsp; {{amazon_id}}</font>-->
+  <span>users list: </span><button ng-repeat="(key, users) in users_list" ng-click="loadInfo(key,'')">{{key}}</button>
+  <h2> &nbsp; LOGGED IN AS: {{user.$id}}</h2>
+  <h4> &nbsp; CURRENT LEVEL: {{user.level}}</h4>
+  <p align="right"></p>
+
+  <p align="right"><!--Score: <button class="btn btn-primary" type="button">
+  Today <span class="badge">{{user.today.success}}/{{user.today.total}}</span>
+</button>-->
+  <button class="btn btn-primary" type="button">
+  Overall <span class="badge">{{user.success}}/{{user.total}}</span>
+</button>
+  </p>
+</div>
+
+<H3>Level stats</H3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Correct count</th>
+      <th>Play count</th>
+      <th>Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="(key, level) in level_stats"
+        ng-class="primary">
+      <td>{{key}}</td>
+      <td>{{level.correct}}</td>
+      <td>{{level.play}}</td>
+      <td>{{level.play==0?(0):((level.correct/level.play)*100)}}%</td>
+    </tr>
+  </tbody>
+</table>
+
+<H3>Recent Incorrect Words</H3>
+<button ng-repeat="(key, word) in incorrect_words"  type="button">
+  {{word.$id}} <!--<span class="badge">{{-word.$value}}</span>&nbsp;-->
+</button>
+
+<H3>Recent Results (Latest 20)</H3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Text</th>
+      <th>Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="result in results"
+        ng-class="result.accuracy>0.8 ? 'success' : 'danger'">
+      <td>{{result.level}}</td>
+      <td ng-bind-html="result.sentence | del2html"/></td>
+      <td>{{result.accuracy}}</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
