@@ -22,17 +22,17 @@ function createSampleUser(user, uid) {
   //user
   var user_obj= {};
   user_obj[user] = {
-    "level":5,
+    "level":1,
     "play":0,
     "accuracy":0,
     "lastplay":0,
-    "total":86,
-    "success":64
+    "total":0,
+    "success":0
   };
   firebase.database().ref(USERS_REF+uid).update(user_obj);
   // firebase.database().ref(USERS_REF+uid).update(obj);
   //levelhistory
-  var user_levelhistory_obj={};
+  /*var user_levelhistory_obj={};
   user_levelhistory_obj[user] = {
     1:{
       "play":12,
@@ -104,9 +104,9 @@ function createSampleUser(user, uid) {
     },
   };
 
-  firebase.database().ref(USERS_MISSPELLEDWORDS_REF+uid).update(user_misspelledwords_obj);
+  firebase.database().ref(USERS_MISSPELLEDWORDS_REF+uid).update(user_misspelledwords_obj);*/
 }
-//createSampleUser("jay","amzn1_ask_account_AFP3ZWPOS2BGJR7OWJZ3DHPKMOMEGLTJVCHXOEVR34VSARGWN23CW6U7R3VZQ6U47AMNCUZRRUEB3UPWFAAGMXL3BCL3CCFZV5SI2S5RBOCQWN4N5Z46ZYN4CDRYCFDASVTLUXBMFPYFNSR32Q62HLKQ3L4TFZCGOWYGTBSV5OBZKCENYL6CP4QPHI53AZ6IMR4OLGEDOQ4JD2I");
+//createSampleUser("someone","amzn1_ask_account_AFP3ZWPOS2BGJR7OWJZ3DHPKMOMEGLTJVCHXOEVR34VSARGWN23CW6U7R3VZQ6U47AMNCUZRRUEB3UPWFAAGMXL3BCL3CCFZV5SI2S5RBOCQWN4N5Z46ZYN4CDRYCFDASVTLUXBMFPYFNSR32Q62HLKQ3L4TFZCGOWYGTBSV5OBZKCENYL6CP4QPHI53AZ6IMR4OLGEDOQ4JD2I");
 
 function retrieveUserData(callback) {
   return firebase.database().ref(USERS_REF+UID+"/"+"jay").on('value', function(snapshot) {

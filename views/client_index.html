@@ -59,37 +59,17 @@
   <span>users list: </span><button ng-repeat="(key, users) in users_list" ng-click="loadInfo(key,'')">{{key}}</button>
   <h2> &nbsp; LOGGED IN AS: {{user.$id}}</h2>
   <h4> &nbsp; CURRENT LEVEL: {{user.level}}</h4>
+  <h4> &nbsp; CURRENT sentence: {{user.current_text}}</h4>
   <p align="right"></p>
 
-  <p align="right"><!--Score: <button class="btn btn-primary" type="button">
+  <p align="right">Score: <button class="btn btn-primary" type="button">
   Today <span class="badge">{{user.today.success}}/{{user.today.total}}</span>
-</button>-->
+</button>
   <button class="btn btn-primary" type="button">
   Overall <span class="badge">{{user.success}}/{{user.total}}</span>
 </button>
   </p>
 </div>
-
-<H3>Level stats</H3>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Level</th>
-      <th>Correct count</th>
-      <th>Play count</th>
-      <th>Accuracy</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="(key, level) in level_stats"
-        ng-class="primary">
-      <td>{{key}}</td>
-      <td>{{level.correct}}</td>
-      <td>{{level.play}}</td>
-      <td>{{level.play==0?(0):((level.correct/level.play)*100)}}%</td>
-    </tr>
-  </tbody>
-</table>
 
 <H3>Recent Incorrect Words</H3>
 <button ng-repeat="(key, word) in incorrect_words"  type="button">
@@ -114,5 +94,27 @@
     </tr>
   </tbody>
 </table>
+
+<H3>Level stats</H3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Correct count</th>
+      <th>Play count</th>
+      <th>Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="(key, level) in level_stats"
+        ng-class="primary">
+      <td>{{key}}</td>
+      <td>{{level.correct}}</td>
+      <td>{{level.play}}</td>
+      <td>{{level.play==0?(0):((level.correct/level.play)*100)}}%</td>
+    </tr>
+  </tbody>
+</table>
+
 </body>
 </html>
