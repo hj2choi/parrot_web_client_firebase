@@ -1,9 +1,5 @@
 [
-  {"level":"1", "sentence":"sampleSentences from json"},
-  {"level":"2", "sentence":"sampleSentencesLv2 from json"},
-  {"level":"3", "sentence":"sampleSentencesLv3 from json"}
-
-
-
-
+  {"level":1,"sentence":"some sentence"},
+  {"level":7,"sentence":"another sentence"},
+  {"level":2,"sentence":"blahh"}
 ]
