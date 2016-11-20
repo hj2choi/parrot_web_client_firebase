@@ -77,7 +77,7 @@
     <tr ng-repeat="result in results"
         ng-class="result.accuracy>0.8 ? 'success' : 'danger'">
       <td>{{result.level}}</td>
-      <td ng-bind-html="result.sentence | del2html"/></td>
+      <td>{{result.sentence}}</td>
       <td>{{result.accuracy}}</td>
     </tr>
   </tbody>

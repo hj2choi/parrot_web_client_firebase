@@ -71,11 +71,3 @@ app.controller("MainCtrl", function($sce, $scope, $firebaseArray, $firebaseObjec
   $scope.authenticateUserAndLoad();
 
 });
-
-
-app.filter("del2html", ['$sce', function($sce) {
-  return function(str){
-    htmlCode = str.replace(/\[/g, "<strike>").replace(/\]/g, "</strike>");
-    return $sce.trustAsHtml(htmlCode);
-  }
-}]);
