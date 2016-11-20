@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Facebook Login JavaScript Example</title>
+<meta charset="UTF-8">
+</head>
+<body>
+<script>
+
+  var current_userID = null;
+
+
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '156408871493935',
+      cookie     : true,  // enable cookies to allow the server to access the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.8' // use graph api version 2.8
+    });
+  };
+
+  function checkAndHandleLoginState() {
+    FB.getLoginStatus(function(response) {
+      console.log(response);
+      if (response.status === 'connected') {
+        // Logged into your app and Facebook.
+        current_userID = response.userID;
+      } else if (response.status === 'not_authorized') {
+        // The person is logged into Facebook, but not your app.
+        current_userID = null;
+      } else {
+        // The person is not logged into Facebook, so we're not sure if
+        // they are logged into this app or not.
+        current_userID = null;
+      }
+    });
+  }
+
+  function fbLogin() {
+    FB.login(function(response) {
+      console.log("log in successful");
+      console.log(response);
+      checkAndHandleLoginState();
+    }, {scope: 'email'});
+  }
+
+  function fbLogout() {
+    FB.logout(function(response) {
+      console.log("logout successful");
+      console.log(response);
+      checkAndHandleLoginState();
+    })
+  }
+
+
+
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      if (response.error) {
+        // some error
+        console.log("ERROR: FB API Call (check login status)");
+        return;
+      }
+      console.log('Successful API call for: ' + response.name);
+      console.log(response);
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + '!';
+    });
+  }
+
+</script>
+
+<input id="loginButton" type="button" value="Login with Facebook" onclick="fbLogin()" />
+<input id="logoutButton" type="button" value="Logout from Facebook" onclick="fbLogout()" />
+<input id="testAPIButton" type="button" value="use test API" onclick="testAPI()" />
+<input id="checkStatusButton" type="button" value="check login status" onclick="checkAndHandleLoginState()" />
+
+<div id="status">
+</div>
+
+</body>
+</html>

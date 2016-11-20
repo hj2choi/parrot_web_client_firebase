@@ -1,7 +1,5 @@
-
-
 <!DOCTYPE html>
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta http-equiv="content-type" content="text/html" charset="UTF-8"/>
   <head>
     <title>Talk in English</title>
 
@@ -19,43 +17,33 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
 
 <!-- Firebase -->
+<!--<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>-->
 
 <!-- AngularFire -->
 <script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
 
+<!--facebook login-->
+<script src="https://connect.facebook.net/en_US/sdk.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  // TODO: Change this to your info
-  // var config = {
-  //   apiKey: "AIzaSyDLY-N39E8huYEy4GZuDgCQd2aivUbRg4Q",
-  //   authDomain: "talkenglish-c1465.firebaseapp.com",
-  //   databaseURL: "https://talkenglish-c1465.firebaseio.com",
-  //   storageBucket: "talkenglish-c1465.appspot.com",
-  // };
-  // firebase.initializeApp(config);
-</script>
 
-
+<script src="js/fbAuth.js"></script>
 <script src="js/app.js"></script>
+<script src="js/dummy.js"></script>
   </head>
 <body ng-app="TalkInEnglish" ng-controller="MainCtrl">
+
+
+
 {{loadData("")}}
 <div class="jumbotron">
-<!--  <p>
-    <button class="btn btn-info"
-            ng-click="loadInfo('amzn1_ask_account_AFP3ZWPOS2BGJR7OWJZ3DHPKMOMNWY4AY66FUR7ILBWANIHQN73QHTPZBMVWMNVZHDMMC6XXPEXLEV6NIS6NZ2E673ZIGSDGVYIM6GONZ72SUEC32UT6VA2LYXFDSQBWTMNBJHQDVKGK4HZ5WVIZAN5WXFDMBYLRXRZZM3ZHWR5YMGDP56RXVWURYRVMN4AJRTNPSJS5FHOHWNY')">
-  Login as Sung
-</button>
-    <button class="btn btn-success"
-            ng-click="loadInfo('amzn1_ask_account_AFP3ZWPOS2BGJR7OWJZ3DHPKMOMNWY4AY66FUR7ILBWANIHQN73QGUA3FLLTMOPTVY7GKF4LWTQ6DSSEGIT3YY764PCRFQ6OXTCG6RZM5Q7WXKDJQXEV7FNN4BBDTWZPLMR4AHONQUPV5SIECAQGH2F2QPAKJE2WLKWZLCPE6GC3KM5A7M23ZIBTKUNNLDCRFLAHLA3D4SG6Z5Q')">
-  Login as Dawon
-</button>
+  <input id="loginButton" type="button" value="Login with Facebook" ng-click="fbLogin()" />
+  <input id="logoutButton" type="button" value="Logout from Facebook" ng-click="fbLogout()" />
+  <input id="testAPIButton" type="button" value="use test API (disabled)" onclick="testAPI()" />
+  <input id="checkStatusButton" type="button" value="check login status" onclick="checkAndHandleLoginState()" />
+  <br><br>
 
-
-
-    Say this:</p>-->
-  <font size="1"> &nbsp; {{amazon_id}}</font>
+  <font size="1"> &nbsp; account ID: {{amazon_id}}</font></br>
   <span>users list: </span><button ng-repeat="(key, users) in users_list" ng-click="loadInfo(key,'')">{{key}}</button>
   <h2> &nbsp; LOGGED IN AS: {{user.$id}}</h2>
   <h4> &nbsp; CURRENT LEVEL: {{user.level}}</h4>

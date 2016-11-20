@@ -41,3 +41,7 @@ app.get('/client_index.html', function(request, res) {
   console.log("get /");
   res.sendFile(path.join(__dirname+'/views/client_index.html'));
 });
+app.get('/authTest.html', function(request, res) {
+  console.log("get /");
+  res.sendFile(path.join(__dirname+'/views/authTest.html'));
+});
