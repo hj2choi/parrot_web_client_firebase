@@ -19,6 +19,7 @@ var config = {
 
 var ADMIN_NAME_TEMP = "Hong Joon CHOI"; // need to use actual account in the future
 var DB_REF = "/sentences/level/";
+var DB_REF_TEST = "/test_sentences/level/"
 
 
 var unwatch;  // function used to unregister data event listener
@@ -80,6 +81,28 @@ function addSentence(input_level, input_sentence, update_target) {
   return 0;
 }
 
+
+function clearTestSentencesTable() {
+  liveLog("clearTestSentencesTable()");
+  // input validation
+
+  firebase.database().ref(DB_REF_TEST).remove();
+  return 0;
+}
+
+function addSentenceToTest(input_level, input_sentence, update_target) {
+  liveLog("addSentence Test ('"+input_level+"', '"+input_sentence+"')");
+  // input validation
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<10)) {
+    return -1;
+  }
+  if (!input_sentence) {
+    return -2;
+  }
+
+  firebase.database().ref(DB_REF_TEST+input_level).push(sentenceObjectFactory(input_level, input_sentence, update_target));
+  return 0;
+}
 
 function updateSentence(node, input_level, input_sentence) {
   //liveLog("update sentence["+node.key+"] with ("+input_level+", "+input_sentence+")");
@@ -250,7 +273,11 @@ var sentenceSubmitController = function($scope) {
 
   }
 
-  $scope.batchUpload = function() {
+  $scope.batchUpload = function(testUpload) {
+    if (testUpload) {
+      clearTestSentencesTable();
+    }
+    console.log("uploading to test ref = "+testUpload);
     var file = document.getElementById('inputFile').files[0];
     var file_reader = new FileReader();
     //console.log(file_reader);
@@ -269,9 +296,16 @@ var sentenceSubmitController = function($scope) {
         var jsonResult = JSON.parse(lines);
         console.log(jsonResult);
         for (var i=0; i<jsonResult.length; ++i) {
-          if (addSentence(jsonResult[i].level, jsonResult[i].sentence, null)) {
-            liveLog("ERROR: addSentence()");
+          if (!testUpload){
+            if (addSentence(jsonResult[i].level, jsonResult[i].sentence, null)) {
+              liveLog("ERROR: addSentence()");
+            }
+          } else {
+            if (addSentenceToTest(jsonResult[i].level, jsonResult[i].sentence, null)) {
+              liveLog("ERROR: TESTUPLOAD: addSentence()");
+            }
           }
+
         }
       }
       catch(err) {
