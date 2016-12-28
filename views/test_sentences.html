@@ -27,7 +27,7 @@
     <!-- scripts -->
     <script src="js/runtimeLogger.js"></script>
     <script src="js/custom.js"></script>
-    <script>var DB_REF_OVERRIDE;</script>
+    <script>var DB_REF_OVERRIDE="/test_sentences/level/"</script>
     <script src="js/sentences.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -93,8 +93,8 @@
                 <ul class="nav">
                     <!-- Main menu -->
                     <li><a href="index.html"><i class="glyphicon glyphicon-home"></i> Dashboard</a></li>
-                    <li class="current"><a href="sentences.html"><i class="glyphicon glyphicon-list"></i> Sentences </a></li>
-                    <li><a href="test_sentences.html"><i class="glyphicon glyphicon-list"></i> Test Sentences </a></li>
+                    <li><a href="sentences.html"><i class="glyphicon glyphicon-list"></i> Sentences </a></li>
+                    <li class="current"><a href="test_sentences.html"><i class="glyphicon glyphicon-list"></i> Test Sentences </a></li>
                     <li><a href="trial_sentences.html"><i class="glyphicon glyphicon-list"></i> Trial Sentences </a></li>
                 </ul>
              </div>
@@ -197,7 +197,6 @@
                 </div>
                 <div class="col-md-4">
                   <button type="submit" class="btn btn-primary" id="addSentences" ng-click="batchUpload(false)">add sentences</button>
-                  <!--<button type="submit" class="btn btn-primary" id="addSentences" ng-click="batchUpload(true)">test sentences</button>-->
                 </div>
               </div>
 

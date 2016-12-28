@@ -18,7 +18,12 @@ var config = {
 //TODO: create factory function
 
 var ADMIN_NAME_TEMP = "Hong Joon CHOI"; // need to use actual account in the future
-var DB_REF = "/sentences/level/";
+var DB_REF;
+if (DB_REF_OVERRIDE) {
+  DB_REF = DB_REF_OVERRIDE;
+} else {
+  DB_REF = "/sentences/level/";
+}
 var DB_REF_TEST = "/test_sentences/level/"
 
 
