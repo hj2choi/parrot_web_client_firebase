@@ -15,8 +15,6 @@ var config = {
   storageBucket: "alexa-parrot.appspot.com"
 };
 
-//TODO: create factory function
-
 var ADMIN_NAME_TEMP = "Hong Joon CHOI"; // need to use actual account in the future
 var DB_REF;
 if (DB_REF_OVERRIDE) {

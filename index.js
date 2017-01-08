@@ -45,6 +45,10 @@ app.get('/trial_sentences.html', function(request, res) {
   console.log("get /");
   res.sendFile(path.join(__dirname+'/views/trial_sentences.html'));
 });
+app.get('/settings.html', function(request, res) {
+  console.log("get /");
+  res.sendFile(path.join(__dirname+'/views/settings.html'));
+});
 app.get('/client_index.html', function(request, res) {
   console.log("get /");
   res.sendFile(path.join(__dirname+'/views/client_index.html'));

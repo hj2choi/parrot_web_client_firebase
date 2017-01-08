@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myModule">
   <head>
     <title>Parrot Admin Console</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,22 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- styles -->
     <link href="css/styles.css" rel="stylesheet">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+
+    <!-- firebase dependencies -->
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+    <!-- angular.js dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="js/dependencies/angularfire.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="js/settings.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -61,11 +77,11 @@
 		  	<div class="sidebar content-box" style="display: block;">
                 <ul class="nav">
                     <!-- Main menu -->
-                    <li class="current"><a href="index.html"><i class="glyphicon glyphicon-home"></i> Dashboard</a></li>
+                    <li><a href="index.html"><i class="glyphicon glyphicon-home"></i> Dashboard</a></li>
                     <li><a href="sentences.html"><i class="glyphicon glyphicon-list"></i> Sentences </a></li>
                     <li><a href="test_sentences.html"><i class="glyphicon glyphicon-list"></i> Test Sentences </a></li>
                     <li><a href="trial_sentences.html"><i class="glyphicon glyphicon-list"></i> Trial Sentences </a></li>
-                    <li><a href="settings.html"><i class="glyphicon glyphicon-list"></i> Settings </a></li>
+                    <li class="current"><a href="settings.html"><i class="glyphicon glyphicon-list"></i> Settings </a></li>
                 </ul>
              </div>
 		  </div>
@@ -73,28 +89,50 @@
 		  	<div class="row">
 		  		<div class="col-md-12 panel-warning">
 		  			<div class="content-box-header panel-heading">
-	  					<div class="panel-title ">Administrator Console Requirements</div>
-
-						<!--<div class="panel-options">
-							<a href="#" data-rel="collapse"><i class="glyphicon glyphicon-refresh"></i></a>
-							<a href="#" data-rel="reload"><i class="glyphicon glyphicon-cog"></i></a>
-						</div>-->
+	  					<div class="panel-title">Parrot Configurations</div>
 		  			</div>
-		  			<div class="content-box-large box-with-header">
-              <ul>
-                <li><b>(TODO)</b> Create authenticative mechanisms</li>
-                <br>
-                <li><b>(TODO)</b> Sentence management page: 1) search by level, acc, keyword, etc. 2) add sentence (batch/single). 3) edit sentences,difficulty. 4) deltete sentence </li>
-                <br>
-                <li><b>(TODO)</b> User management page: display usage statistics, track new users, level distribution, display user data</li>
-              </ul>
+		  			<div ng-controller="settingsController" class="content-box-large box-with-header">
+              <div class="form-group">
+                <div class="row">
+                  <label for="input" class="col-sm-2 control-label">accuracy_pass</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="accuracy_pass" placeholder="0 ~ 1" ng-model="settings.accuracy_pass" value="{{settings.accuracy_pass}}"></input>
+                  </div>
+                </div></br>
+
+                <div class="row">
+                  <label for="input" class="col-sm-2 control-label">level_num_check</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="level_num_check" placeholder="1 ~" ng-model="settings.level_num_check" value="{{settings.level_num_check}}"></input>
+                  </div>
+                </div></br>
+
+                <div class="row">
+                  <label for="input" class="col-sm-2 control-label">level_num_pass</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="level_num_pass" placeholder="1 ~" ng-model="settings.level_num_pass" value="{{settings.level_num_pass}}"></input>
+                  </div>
+                </div></br>
+
+                <div class="row">
+                  <label for="input" class="col-sm-2 control-label">player_max_num</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="player_max_num" placeholder="1 ~" ng-model="settings.player_max_num" value="{{settings.player_max_num}}"></input>
+                  </div>
+                </div></br>
+
+                <span>
+                  <button type="submit" class="btn btn-warning" id="addSentences" ng-click="resetSettings()">reset to default</button>
+                  <button type="submit" class="btn btn-primary" id="addSentences" ng-click="saveSettings()">save current settings</button>
+                </span>
+
+                <h4>{{error_msg}}</h4>
+
+              </div>
 					  </div>
 		  		</div>
 		  	</div>
 
-		  	<div class="content-box-large">
-    			Some text here
-		  	</div>
 		  </div>
 		</div>
     </div>
@@ -109,10 +147,5 @@
       </div>
     </footer>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://code.jquery.com/jquery.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/custom.js"></script>
   </body>
 </html>
