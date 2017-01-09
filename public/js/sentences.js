@@ -65,6 +65,26 @@ var sentenceObjectFactory = function(_level, _sentence, _update_target) {
 
 
 /*
+  add sentence to main DB
+*/
+function addToMainDB(input_level, input_sentence, original_key) {
+  liveLog("addToMainDB ('"+input_level+"', '"+input_sentence+"')");
+  // input validation
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<10)) {
+    return -1;
+  }
+  if (!input_sentence) {
+    return -2;
+  }
+
+  firebase.database().ref("/sentences/level/"+input_level).push(sentenceObjectFactory(input_level, input_sentence, null));
+  firebase.database().ref(DB_REF + input_level+"/"+original_key).remove();
+
+  return 0;
+}
+
+
+/*
   add sentence to firebase
 
   returns true if there is an error
@@ -273,7 +293,23 @@ var sentenceSubmitController = function($scope) {
       $scope.level="";
       $scope.sentence="";
     }
+  }
 
+  $scope.addToMainDB = function(target) {
+    console.log(target.node);
+    var err = addToMainDB(target.node.level, target.node.sentence, target.node.key);
+    if (err == -1) {
+      liveLog("addToMainDB(): failed to validate input.");
+      $scope.level="";
+    } else if (err == -2) {
+      liveLog("addToMainDB(): failed to validate input.");
+      $scope.sentence="";
+    }
+    else {
+      alert("sentence successfully added to main DB: ["+$scope.level+"] "+$scope.sentence);
+      $scope.level="";
+      $scope.sentence="";
+    }
   }
 
   $scope.batchUpload = function(testUpload) {

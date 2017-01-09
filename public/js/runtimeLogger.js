@@ -14,7 +14,7 @@
  *
  */
 
-var ENABLE_LOG = true;
+var ENABLE_LOG = false;
 
 var MAX_LOG_LENGTH = 15;
 var MAX_MESSAGE_LENGTH = 80;

@@ -149,8 +149,8 @@
                     <th></th>
     							</tr>
     						</thead>
-    						<tbody>
-                  <tr ng-controller="sentenceSubmitController">
+    						<tbody ng-controller="sentenceSubmitController">
+                  <tr>
     								<td><input style="width:35px;" type="text" ng-model="level"></input></td>
     								<td><input style="width:100%;" type="text" ng-model="sentence"></input></td>
     								<td class="center"></td>
@@ -167,8 +167,8 @@
     								<td class="center">{{node.correct}}</td>
                     <td class="center">{{(node.accuracy*100)+"%"}}</td>
                     <td class="center">
-                      <!--<button ng-click="update(node, node.level, node.sentence)">update</button>
-                      <span style="margin-left:15px;"></span>-->
+                      <button class="btn btn-primary" ng-click="addToMainDB(this)">add to main DB</button>
+                      <span style="margin-left:15px;"></span>
                       <button style="background-color:red;color:white;" ng-click="remove(node)">X</button>
                     </td>
     							</tr>
