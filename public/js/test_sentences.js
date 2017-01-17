@@ -16,14 +16,7 @@ var config = {
 };
 
 var ADMIN_NAME_TEMP = "Hong Joon CHOI"; // need to use actual account in the future
-var DB_REF;
-if (DB_REF_OVERRIDE) {
-  DB_REF = DB_REF_OVERRIDE;
-} else {
-  DB_REF = "/sentences/level/";
-}
-var DB_REF_TEST = "/test_sentences/level/"
-var MAX_SENTENCE_LEVEL = 1000;
+var DB_REF = "/test_sentences/";
 
 var unwatch;  // function used to unregister data event listener
 var data_load_progress = 1;
@@ -63,14 +56,13 @@ var sentenceObjectFactory = function(_level, _sentence, _update_target) {
   };
 }
 
-
 /*
   add sentence to main DB
 */
 function addToMainDB(input_level, input_sentence, original_key) {
   liveLog("addToMainDB ('"+input_level+"', '"+input_sentence+"')");
   // input validation
-  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<MAX_SENTENCE_LEVEL)) {
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<10)) {
     return -1;
   }
   if (!input_sentence) {
@@ -78,7 +70,7 @@ function addToMainDB(input_level, input_sentence, original_key) {
   }
 
   firebase.database().ref("/sentences/level/"+input_level).push(sentenceObjectFactory(input_level, input_sentence, null));
-  firebase.database().ref(DB_REF + input_level+"/"+original_key).remove();
+  firebase.database().ref(DB_REF+original_key).remove();
 
   return 0;
 }
@@ -88,70 +80,30 @@ function addToMainDB(input_level, input_sentence, original_key) {
   add sentence to firebase
 
   returns true if there is an error
-
 */
-function addSentence(input_level, input_sentence, update_target) {
-  liveLog("addSentence ('"+input_level+"', '"+input_sentence+"')");
+function addSentence(input_sentence) {
+  liveLog("addSentence ('"+input_sentence+"')");
   // input validation
-  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<MAX_SENTENCE_LEVEL)) {
-    return -1;
-  }
   if (!input_sentence) {
     return -2;
   }
 
-  firebase.database().ref(DB_REF+input_level).push(sentenceObjectFactory(input_level, input_sentence, update_target));
+  firebase.database().ref(DB_REF).push(sentenceObjectFactory(1,input_sentence, null));
   return 0;
 }
 
-
-function clearTestSentencesTable() {
-  liveLog("clearTestSentencesTable()");
+function updateSentence(node, input_sentence) {
+  liveLog("update sentence["+node.key+"] with ("+input_sentence+")");
   // input validation
+  firebase.database().ref(DB_REF).put({sentence:input_sentence});
 
-  firebase.database().ref(DB_REF_TEST).remove();
   return 0;
 }
 
-function addSentenceToTest(input_level, input_sentence, update_target) {
-  liveLog("addSentence Test ('"+input_level+"', '"+input_sentence+"')");
-  // input validation
-  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<MAX_SENTENCE_LEVEL)) {
-    return -1;
-  }
-  if (!input_sentence) {
-    return -2;
-  }
-
-  firebase.database().ref(DB_REF_TEST+input_level).push(sentenceObjectFactory(input_level, input_sentence, update_target));
-  return 0;
-}
-
-function updateSentence(node, input_level, input_sentence) {
-  //liveLog("update sentence["+node.key+"] with ("+input_level+", "+input_sentence+")");
-  // input validation
-  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<MAX_SENTENCE_LEVEL)) {
-    return -1;
-  }
-  if (!input_sentence) {
-    return -2;
-  }
-
-  console.log(node);
-
-  // remove old node
-  for (var i=1; i<10; ++i) {
-    firebase.database().ref(DB_REF + i+"/"+node.key).remove();
-  }
-  // add updated node
-  addSentence(input_level, input_sentence, node);
-  return 0;
-}
-
-function removeSentence (level, key) {
+function removeSentence (key) {
   if (confirm("delte sentence id "+key+"?")) {
     liveLog("removeSentence ('"+key+"')");
-    firebase.database().ref(DB_REF + level+"/"+key).remove();
+    firebase.database().ref(DB_REF+key).remove();
   }
 }
 
@@ -159,17 +111,12 @@ function removeSentence (level, key) {
 /*
   parse raw firebaseObj into angularjs-repeat tag consumable array form
 */
-function parseSentencesData(level_input, firebaseObj) {
+function parseSentencesData(firebaseObj) {
   var nodes = new Array();
-  angular.forEach(firebaseObj, function(level_sentences, level) {
-    console.log(level_sentences);
-    angular.forEach(level_sentences, function(value, k){
-      value.key = k;
-      value["level"] = level;
-      if (level == level_input || level_input=="all") {
-        nodes.push(value);
-      }
-    });
+  angular.forEach(firebaseObj, function(value, key) {
+    console.log(value);
+    value.key = key;
+    nodes.push(value);
   });
   return nodes;
 }
@@ -177,12 +124,7 @@ function parseSentencesData(level_input, firebaseObj) {
 /*
   pulls sentences data by level and registers new data event listener
 */
-function pullSentencesDataByLevel(level, $scope, $firebaseObject) {
-  if (level <1 || level>9) {
-    console.log("ERR: invalid level");
-    return false;
-  }
-
+function pullSentencesDataByLevel($scope, $firebaseObject) {
   if (unwatch) {
     unwatch();
   }
@@ -194,8 +136,11 @@ function pullSentencesDataByLevel(level, $scope, $firebaseObject) {
 
   unwatch = firebaseObj.$watch(function() {
     data_load_progress=-5; // signals the completion of load
-    liveLog("pulled up-to date data (level "+level+")");
-    $scope.data = parseSentencesData(level, firebaseObj).slice(); // copy by value
+    liveLog("pulled up-to date data");
+    $scope.data = parseSentencesData(firebaseObj).slice();
+
+    //console.log("data = ");
+    //console.log($scope.data);
     $scope.list_length = $scope.data.length;
   });
 
@@ -207,9 +152,8 @@ function searchFilter($scope, item){
     return true;
   }
   var sentenceFlag = item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
-  var levelFlag = (""+item.level).toLowerCase() == ($scope.searchValue.toLowerCase());
 
-  if (levelFlag || sentenceFlag) {
+  if (sentenceFlag) {
     return true;
   }
   return false;
@@ -217,7 +161,7 @@ function searchFilter($scope, item){
 
 var databaseViewController = function($scope, $firebaseObject) {
   //liveLog("pulling data from firebase");
-  pullSentencesDataByLevel(1, $scope,$firebaseObject);
+  pullSentencesDataByLevel($scope,$firebaseObject);
   $scope.levelValue = "1";
   $scope.list_length = 0;
 
@@ -229,14 +173,14 @@ var databaseViewController = function($scope, $firebaseObject) {
     return searchFilter($scope, item);
   }
 
-  $scope.update = function(node, level, sentence) {
-    if (updateSentence(node, level, sentence)) {
+  $scope.update = function(node, sentence) {
+    if (updateSentence(node, sentence)) {
       liveLog("updateSentence(): failed to validate input.");
     }
   }
 
   $scope.remove = function(node) {
-    removeSentence(node.level, node.key);
+    removeSentence(node.key);
   }
 }
 
@@ -279,72 +223,61 @@ var sentencesSortController = function($scope) {
 }
 
 var sentenceSubmitController = function($scope) {
+
   $scope.submitSentence = function() {
-    var err = addSentence($scope.level, $scope.sentence, null);
-    if (err == -1) {
-      liveLog("addSentence(): failed to validate input.");
-      $scope.level="";
-    } else if (err == -2) {
+    var err = addSentence($scope.sentence);
+    if (err == -2) {
       liveLog("addSentence(): failed to validate input.");
       $scope.sentence="";
     }
     else {
-      alert("sentence successfully added: ["+$scope.level+"] "+$scope.sentence);
-      $scope.level="";
+      alert("sentence successfully added: "+$scope.sentence);
       $scope.sentence="";
     }
   }
 
   $scope.addToMainDB = function(target) {
     console.log(target.node);
-    var err = addToMainDB(target.node.level, target.node.sentence, target.node.key);
+
+    var targetLevel = prompt("sentence:\n\"target.node.sentence\"\nWhich level?");
+
+    var err = addToMainDB(targetLevel, target.node.sentence, target.node.key);
     if (err == -1) {
       liveLog("addToMainDB(): failed to validate input.");
-      $scope.level="";
     } else if (err == -2) {
       liveLog("addToMainDB(): failed to validate input.");
       $scope.sentence="";
     }
     else {
-      alert("sentence successfully added to main DB: ["+$scope.level+"] "+$scope.sentence);
-      $scope.level="";
+      alert("sentence successfully added to main DB: ["+targetLevel+"] "+$scope.sentence);
       $scope.sentence="";
     }
   }
 
-  $scope.batchUpload = function(testUpload) {
-    if (testUpload) {
-      clearTestSentencesTable();
-    }
-    console.log("uploading to test ref = "+testUpload);
+  $scope.batchUpload = function() {
+    console.log("uploading to test sentences table");
     var file = document.getElementById('inputFile').files[0];
     var file_reader = new FileReader();
     //console.log(file_reader);
     console.log(file.type);
-    if (file.type=="text/plain") {
-     //liveLog("text file detected");
-    } else if (file.type!="application/json") {
-      liveLog("ERROR: .json file required! ");
+    if (!file.type=="text/plain") {
+      liveLog("ERROR: .txt file required! ");
       return;
     }
     file_reader.onload = receivedText;
     file_reader.readAsText(file);
     function receivedText(e) {
       try {
-        lines = e.target.result;
-        var jsonResult = JSON.parse(lines);
-        console.log(jsonResult);
-        for (var i=0; i<jsonResult.length; ++i) {
-          if (!testUpload){
-            if (addSentence(jsonResult[i].level, jsonResult[i].sentence, null)) {
-              liveLog("ERROR: addSentence()");
-            }
-          } else {
-            if (addSentenceToTest(jsonResult[i].level, jsonResult[i].sentence, null)) {
-              liveLog("ERROR: TESTUPLOAD: addSentence()");
-            }
+        lines = e.target.result.split("\n");
+        console.log(lines);
+        for (var i=0; i<lines.length; ++i) {
+          console.log(lines[i]);
+          if (lines[i]=="") {
+            continue;
           }
-
+          if (addSentence(lines[i])) {
+            liveLog("ERROR: addSentence()");
+          }
         }
       }
       catch(err) {

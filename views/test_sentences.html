@@ -27,8 +27,7 @@
     <!-- scripts -->
     <script src="js/runtimeLogger.js"></script>
     <script src="js/custom.js"></script>
-    <script>var DB_REF_OVERRIDE="/test_sentences/level/"</script>
-    <script src="js/sentences.js"></script>
+    <script src="js/test_sentences.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -111,19 +110,6 @@
 
               <div>
                 Search (sentence) <input type="text" ng-model="searchValue">
-                Level
-                <select ng-model="levelValue" ng-change="onLevelChange()">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="all">all</option>
-                </select>
               </div>
 
               <br>
@@ -131,41 +117,21 @@
     					<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
     						<thead>
     							<tr ng-controller="sentencesSortController">
-    								<th class="clickable" ng-click="changeSortRule(0)">
-                      <a href=""></a>Level <b style="color:red;">{{sort_arrow_0}}</b>
-                    </th>
-    								<th class="clickable" width="50%" ng-click="changeSortRule(1)">
+    								<th class="clickable" width="80%" ng-click="changeSortRule(1)">
                       <a href=""></a>Sentence <b style="color:red;">{{sort_arrow_1}}</b>
-                    </th>
-    								<th class="clickable" ng-click="changeSortRule(2)">
-                      <a href=""></a>used <b style="color:red;">{{sort_arrow_2}}</b>
-                    </th>
-    								<th class="clickable" ng-click="changeSortRule(3)">
-                      <a href=""></a>correct <b style="color:red;">{{sort_arrow_3}}</b>
-                    </th>
-    								<th class="clickable" ng-click="changeSortRule(4)">
-                      <a href=""></a>accuracy <b style="color:red;">{{sort_arrow_4}}</b>
                     </th>
                     <th></th>
     							</tr>
     						</thead>
     						<tbody ng-controller="sentenceSubmitController">
                   <tr>
-    								<td><input style="width:35px;" type="text" ng-model="level"></input></td>
     								<td><input style="width:100%;" type="text" ng-model="sentence"></input></td>
-    								<td class="center"></td>
-    								<td class="center"></td>
-                    <td class="center"></td>
                     <td>
                       <button type="submit" class="btn btn-primary" ng-click="submitSentence(this)">add new</button>
                     </td>
     							</tr>
     							<tr ng-repeat="(key, node) in data | filter:filterByString | sentencesSortFilter">
-    								<td><input style="width:35px;" type="text" ng-model="node.level" value={{node.level}} ng-change="update(node, node.level, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
-    								<td><input style="width:100%;" type="text" ng-model="node.sentence" value={{node.sentence}} ng-change="update(node, node.level, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
-    								<td class="center">{{node.used}}</td>
-    								<td class="center">{{node.correct}}</td>
-                    <td class="center">{{(node.accuracy*100)+"%"}}</td>
+    								<td><input style="width:100%;" type="text" ng-model="node.sentence" value={{node.sentence}} ng-change="update(node, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
                     <td class="center">
                       <button class="btn btn-primary" ng-click="addToMainDB(this)">add to main DB</button>
                       <span style="margin-left:15px;"></span>
@@ -187,17 +153,17 @@
                 <div class="col-md-5">
                   <input type="file" class="btn btn-default" id="inputFile">
                   <p class="help-block">
-                    Create and submit .json or .txt file<br>
+                    Create and submit .txt file<br>
                     example content of the file:<br>
-                    [<br>
-                    &nbsp;&nbsp;{"level":1,"sentence":"some sentence"},<br>
-                    &nbsp;&nbsp;{"level":7,"sentence":"another sentence"},<br>
-                    &nbsp;&nbsp;{"level":2,"sentence":"blahh"}<br>
-                    ]
+                    <br>
+                    &nbsp;&nbsp;some sentence<br>
+                    &nbsp;&nbsp;another sentence<br>
+                    &nbsp;&nbsp;blahh<br>
+
                   </p>
                 </div>
                 <div class="col-md-4">
-                  <button type="submit" class="btn btn-primary" id="addSentences" ng-click="batchUpload(false)">add sentences</button>
+                  <button type="submit" class="btn btn-primary" id="addSentences" ng-click="batchUpload()">add sentences</button>
                 </div>
               </div>
 
