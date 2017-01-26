@@ -6,7 +6,6 @@
 //   storageBucket: "parrot-db.appspot.com",
 //   messagingSenderId: "8731713390"
 // };
-
 // Jay's firebase
 var config = {
   apiKey: "AIzaSyCN4VE64n2J8MvaaN1xpaRLN8G9dNXhQZI",
@@ -16,7 +15,7 @@ var config = {
 };
 
 var ADMIN_NAME_TEMP = "Hong Joon CHOI"; // need to use actual account in the future
-var DB_REF = "/trial_sentences/";
+var DB_REF = "/free_trial_sentences/";
 
 var unwatch;  // function used to unregister data event listener
 var data_load_progress = 1;
@@ -275,25 +274,10 @@ var sentenceSubmitController = function($scope) {
           if (lines[i]=="") {
             continue;
           }
-          if (addSentence()) {
-            liveLog("ERROR: add");
+          if (addSentence(lines[i])) {
+            liveLog("ERROR: addSentence()");
           }
         }
-
-        /*var jsonResult = JSON.parse(lines);
-        console.log(jsonResult);
-        for (var i=0; i<jsonResult.length; ++i) {
-          if (!testUpload){
-            if (addSentence(jsonResult[i].level, jsonResult[i].sentence, null)) {
-              liveLog("ERROR: addSentence()");
-            }
-          } else {
-            if (addSentenceToTest(jsonResult[i].level, jsonResult[i].sentence, null)) {
-              liveLog("ERROR: TESTUPLOAD: addSentence()");
-            }
-          }
-
-        }*/
       }
       catch(err) {
         liveLog("ERROR: something went wrong reading .json file");
