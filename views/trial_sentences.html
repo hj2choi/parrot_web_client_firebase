@@ -144,6 +144,31 @@
     				</div>
           </div>
         </div>
+        <div class="row" ng-controller="sentenceSubmitController">
+          <div class="content-box-large box-with-header">
+            <fieldset>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Batch sentences upload</label>
+                <div class="col-md-5">
+                  <input type="file" class="btn btn-default" id="inputFile">
+                  <p class="help-block">
+                    Create and submit .txt file<br>
+                    example content of the file:<br>
+                    <br>
+                    &nbsp;&nbsp;some sentence<br>
+                    &nbsp;&nbsp;another sentence<br>
+                    &nbsp;&nbsp;blahh<br>
+
+                  </p>
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-primary" id="addSentences" ng-click="batchUpload()">add sentences</button>
+                </div>
+              </div>
+
+            </fieldset>
+          </div>
+        </div>
 
 		  </div>
 		</div>

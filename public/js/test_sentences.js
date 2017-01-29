@@ -254,6 +254,27 @@ var sentenceSubmitController = function($scope) {
     }
   }
 
+  $scope.addAllToMainDB = function() {
+    console.log("addAllToMainDB()");
+    console.log($scope.data);
+    var sentences = $scope.data.slice();
+    for (var i=0; i<sentences.length; ++i) {
+      console.log(sentences[i]);
+      var targetLevel = prompt("SENTENCE:\n\""+sentences[i].sentence+"\"\nWhich level?");
+      var err = addToMainDB(targetLevel, sentences[i].sentence, sentences[i].key);
+      if (err == -1) {
+        liveLog("addToMainDB(): failed to validate input.");
+      } else if (err == -2) {
+        liveLog("addToMainDB(): failed to validate input.");
+        $scope.sentence="";
+      }
+      else {
+      }
+    }
+
+    alert("sentences successfully added to main DB");
+  }
+
   $scope.batchUpload = function() {
     console.log("uploading to test sentences table");
     var file = document.getElementById('inputFile').files[0];
