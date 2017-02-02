@@ -23,7 +23,7 @@ if (DB_REF_OVERRIDE) {
   DB_REF = "/sentences/level/";
 }
 var DB_REF_TEST = "/test_sentences/level/"
-var MAX_SENTENCE_LEVEL = 1000;
+var MAX_SENTENCE_LEVEL = 10000;
 
 var unwatch;  // function used to unregister data event listener
 var data_load_progress = 1;
@@ -178,7 +178,7 @@ function parseSentencesData(level_input, firebaseObj) {
   pulls sentences data by level and registers new data event listener
 */
 function pullSentencesDataByLevel(level, $scope, $firebaseObject) {
-  if (level <1 || level>9) {
+  if (level <1) {
     console.log("ERR: invalid level");
     return false;
   }
@@ -203,27 +203,40 @@ function pullSentencesDataByLevel(level, $scope, $firebaseObject) {
 }
 
 function searchFilter($scope, item){
-  if (!$scope.searchValue) {
-    return true;
-  }
-  var sentenceFlag = item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
-  var levelFlag = (""+item.level).toLowerCase() == ($scope.searchValue.toLowerCase());
+  var sentenceFlag = true;
+  var levelFlag = true;
 
-  if (levelFlag || sentenceFlag) {
-    return true;
+  // special case: empty search pattern
+  if (!$scope.searchValue && !$scope.searchLevelValue) {
+    if (item.level==1) {
+      return true;
+    }
+    return false;
   }
-  return false;
+
+  // sentence search pattern
+  if ($scope.searchValue) {
+    sentenceFlag = item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
+  }
+
+  // level search pattern
+  if ($scope.searchLevelValue) {
+    // select all
+    if ($scope.searchLevelValue=="*") {
+      levelFlag = true;
+    } else {
+      levelFlag = (""+item.level).toLowerCase() == ($scope.searchLevelValue.toLowerCase());
+    }
+  }
+
+  return sentenceFlag && levelFlag;
 }
 
 var databaseViewController = function($scope, $firebaseObject) {
   //liveLog("pulling data from firebase");
-  pullSentencesDataByLevel(1, $scope,$firebaseObject);
-  $scope.levelValue = "1";
+  pullSentencesDataByLevel("all", $scope,$firebaseObject);
+  $scope.levelValue = "all";
   $scope.list_length = 0;
-
-  $scope.onLevelChange = function(){
-    pullSentencesDataByLevel($scope.levelValue, $scope,$firebaseObject);
-  }
 
   $scope.filterByString = function(item) {
     return searchFilter($scope, item);

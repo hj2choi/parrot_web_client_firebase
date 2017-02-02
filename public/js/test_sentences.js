@@ -62,12 +62,14 @@ var sentenceObjectFactory = function(_level, _sentence, _update_target) {
 function addToMainDB(input_level, input_sentence, original_key) {
   liveLog("addToMainDB ('"+input_level+"', '"+input_sentence+"')");
   // input validation
-  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0 && parseInt(input_level)<10)) {
+  if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0)) {
     return -1;
   }
   if (!input_sentence) {
     return -2;
   }
+
+  console.log("addToMainDB: "+original_key);
 
   firebase.database().ref("/sentences/level/"+input_level).push(sentenceObjectFactory(input_level, input_sentence, null));
   firebase.database().ref(DB_REF+original_key).remove();
@@ -162,7 +164,7 @@ function searchFilter($scope, item){
 var databaseViewController = function($scope, $firebaseObject) {
   //liveLog("pulling data from firebase");
   pullSentencesDataByLevel($scope,$firebaseObject);
-  $scope.levelValue = "1";
+  $scope.levelValue = "all";
   $scope.list_length = 0;
 
   $scope.onLevelChange = function(){
@@ -239,7 +241,7 @@ var sentenceSubmitController = function($scope) {
   $scope.addToMainDB = function(target) {
     console.log(target.node);
 
-    var targetLevel = prompt("sentence:\n\"target.node.sentence\"\nWhich level?");
+    var targetLevel = prompt("sentence:\n\""+target.node.sentence+"\"\nWhich level?");
 
     var err = addToMainDB(targetLevel, target.node.sentence, target.node.key);
     if (err == -1) {
@@ -258,9 +260,10 @@ var sentenceSubmitController = function($scope) {
     console.log("addAllToMainDB()");
     console.log($scope.data);
     var sentences = $scope.data.slice();
+    var targetLevel = prompt("Which level?");
+
     for (var i=0; i<sentences.length; ++i) {
       console.log(sentences[i]);
-      var targetLevel = prompt("SENTENCE:\n\""+sentences[i].sentence+"\"\nWhich level?");
       var err = addToMainDB(targetLevel, sentences[i].sentence, sentences[i].key);
       if (err == -1) {
         liveLog("addToMainDB(): failed to validate input.");
