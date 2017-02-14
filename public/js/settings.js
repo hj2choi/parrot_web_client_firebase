@@ -34,6 +34,9 @@ var settingsController = function($scope, $firebaseObject) {
       if (parseInt($scope.settings.level_num_check)>=1 && parseInt($scope.settings.level_num_pass)>=1 && parseInt($scope.settings.player_max_num)>=1) {
         console.log("passed validation");
         firebase.database().ref(DB_REF+"accuracy_pass/").set(parseFloat($scope.settings.accuracy_pass));
+        firebase.database().ref(DB_REF+"level_num_check/").set(parseFloat($scope.settings.level_num_check));
+        firebase.database().ref(DB_REF+"level_num_pass/").set(parseFloat($scope.settings.level_num_pass));
+        firebase.database().ref(DB_REF+"player_max_num/").set(parseFloat($scope.settings.player_max_num));
         $scope.error_msg = "Successfully saved current settings";
         return;
       }
