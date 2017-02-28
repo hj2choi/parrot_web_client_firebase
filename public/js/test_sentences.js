@@ -68,6 +68,10 @@ function addToMainDB(input_level, input_sentence, original_key) {
   if (!input_sentence) {
     return -2;
   }
+  if (input_level!=Math.floor(input_level)) {
+    return -1;
+  }
+  input_level = Math.floor(input_level);
 
   console.log("addToMainDB: "+original_key);
 

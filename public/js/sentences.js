@@ -76,6 +76,10 @@ function addToMainDB(input_level, input_sentence, original_key) {
   if (!input_sentence) {
     return -2;
   }
+  if (input_level!=Math.floor(input_level)) {
+    return -1;
+  }
+  input_level = Math.floor(input_level);
 
   firebase.database().ref("/sentences/level/"+input_level).push(sentenceObjectFactory(input_level, input_sentence, null));
   firebase.database().ref(DB_REF + input_level+"/"+original_key).remove();
@@ -99,6 +103,10 @@ function addSentence(input_level, input_sentence, update_target) {
   if (!input_sentence) {
     return -2;
   }
+  if (input_level!=Math.floor(input_level)) {
+    return -1;
+  }
+  input_level = Math.floor(input_level);
 
   firebase.database().ref(DB_REF+input_level).push(sentenceObjectFactory(input_level, input_sentence, update_target));
   return 0;
@@ -122,6 +130,10 @@ function addSentenceToTest(input_level, input_sentence, update_target) {
   if (!input_sentence) {
     return -2;
   }
+  if (input_level!=Math.floor(input_level)) {
+    return -1;
+  }
+  input_level = Math.floor(input_level);
 
   firebase.database().ref(DB_REF_TEST+input_level).push(sentenceObjectFactory(input_level, input_sentence, update_target));
   return 0;
@@ -136,6 +148,10 @@ function updateSentence(node, input_level, input_sentence) {
   if (!input_sentence) {
     return -2;
   }
+  if (input_level!=Math.floor(input_level)) {
+    return -1;
+  }
+  input_level = Math.floor(input_level);
 
   console.log(node);
 
@@ -148,10 +164,37 @@ function updateSentence(node, input_level, input_sentence) {
   return 0;
 }
 
-function removeSentence (level, key) {
-  if (confirm("delte sentence id "+key+"?")) {
-    liveLog("removeSentence ('"+key+"')");
-    firebase.database().ref(DB_REF + level+"/"+key).remove();
+function removeSentence (level, target_key, $firebaseObject) {
+  if (confirm("delte sentence id "+target_key+"?")) {
+    liveLog("removeSentence ('"+target_key+"')");
+    firebase.database().ref(DB_REF + level+"/"+target_key).remove();
+
+
+    var ref = new Firebase(config.databaseURL+"/sentencetostudy/");
+    var firebaseObj = $firebaseObject(ref);
+
+    firebaseObj.$watch(function() {
+      angular.forEach(firebaseObj, function(node, key) {
+        //console.log(key);
+        angular.forEach(node, function(value, k){
+          //console.log(k);
+          //console.log(value[1]);
+
+          //TODO: search all array
+          if (!value[level]) {
+            return;
+          }
+          for (var i=0; i<value[level].length; ++i) {
+            if (target_key == value[level][i]) {
+              console.log("key match, delete from /sentencetostudy/"+key+"/"+k+"/"+level+"/"+i);
+              firebase.database().ref("/sentencetostudy/" + key+"/"+k+"/"+level+"/"+i).remove();
+            }
+          }
+
+        });
+      });
+
+    });
   }
 }
 
@@ -162,7 +205,7 @@ function removeSentence (level, key) {
 function parseSentencesData(level_input, firebaseObj) {
   var nodes = new Array();
   angular.forEach(firebaseObj, function(level_sentences, level) {
-    console.log(level_sentences);
+    //console.log(level_sentences);
     angular.forEach(level_sentences, function(value, k){
       value.key = k;
       value["level"] = level;
@@ -249,7 +292,7 @@ var databaseViewController = function($scope, $firebaseObject) {
   }
 
   $scope.remove = function(node) {
-    removeSentence(node.level, node.key);
+    removeSentence(node.level, node.key, $firebaseObject);
   }
 }
 

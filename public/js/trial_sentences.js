@@ -67,6 +67,10 @@ function addToMainDB(input_level, input_sentence, original_key) {
   if (!input_sentence) {
     return -2;
   }
+  if (input_level!=Math.floor(input_level)) {
+    return -1;
+  }
+  input_level = Math.floor(input_level);
 
   firebase.database().ref("/sentences/level/"+input_level).push(sentenceObjectFactory(input_level, input_sentence, null));
   firebase.database().ref(DB_REF+original_key).remove();
