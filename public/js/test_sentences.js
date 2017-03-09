@@ -63,12 +63,14 @@ function addToMainDB(input_level, input_sentence, original_key) {
   liveLog("addToMainDB ('"+input_level+"', '"+input_sentence+"')");
   // input validation
   if (!input_level || isNaN(input_level) || !(parseInt(input_level)>0)) {
+    alert("wrong level!");
     return -1;
   }
   if (!input_sentence) {
     return -2;
   }
   if (input_level!=Math.floor(input_level)) {
+    alert("wrong level!");
     return -1;
   }
   input_level = Math.floor(input_level);
@@ -255,7 +257,7 @@ var sentenceSubmitController = function($scope) {
       $scope.sentence="";
     }
     else {
-      alert("sentence successfully added to main DB: ["+targetLevel+"] "+$scope.sentence);
+      alert("sentence successfully added to main DB: ["+Math.floor(targetLevel)+"] "+$scope.sentence);
       $scope.sentence="";
     }
   }
@@ -304,6 +306,7 @@ var sentenceSubmitController = function($scope) {
             continue;
           }
           if (addSentence(lines[i])) {
+            alert("error on line "+i);
             liveLog("ERROR: addSentence()");
           }
         }
