@@ -104,7 +104,7 @@ function updateSentence(node, input_sentence) {
 }
 
 function removeSentence (key) {
-  if (confirm("delte sentence id "+key+"?")) {
+  if (confirm("delte sentence?")) {
     liveLog("removeSentence ('"+key+"')");
     firebase.database().ref(DB_REF+key).remove();
   }

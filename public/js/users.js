@@ -61,10 +61,11 @@ function removeSentence (key) {
 
 
 function searchFilter($scope, item){
+  //console.log(item);
   if (!$scope.searchValue) {
     return true;
   }
-  var sentenceFlag = item.sentence.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
+  var sentenceFlag = item.$id.toLowerCase().indexOf($scope.searchValue.toLowerCase())!=-1;
 
   if (sentenceFlag) {
     return true;

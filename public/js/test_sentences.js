@@ -18,6 +18,7 @@ var config = {
 var ADMIN_NAME_TEMP = "Hong Joon CHOI"; // need to use actual account in the future
 var DB_REF = "/test_sentences/";
 
+var global_sentences
 var unwatch;  // function used to unregister data event listener
 var data_load_progress = 1;
 
@@ -75,7 +76,23 @@ function addToMainDB(input_level, input_sentence, original_key) {
   }
   input_level = Math.floor(input_level);
 
-  console.log("addToMainDB: "+original_key);
+  //console.log("addToMainDB: "+original_key);
+
+  // check for duplicate
+  var duplicateExists = false;
+  if (global_sentences) {
+    console.log(input_level);
+    console.log(global_sentences);
+    for (var i=0; i<global_sentences.length; ++i) {
+      if (global_sentences[i].sentence.trim() == input_sentence.trim() && global_sentences[i].level == input_level) {
+        duplicateExists = true;
+      }
+    }
+  }
+  if (duplicateExists) {
+    alert("dulplicate exists!");
+    return -2;
+  }
 
   firebase.database().ref("/sentences/level/"+input_level).push(sentenceObjectFactory(input_level, input_sentence, null));
   firebase.database().ref(DB_REF+original_key).remove();
@@ -109,7 +126,7 @@ function updateSentence(node, input_sentence) {
 }
 
 function removeSentence (key) {
-  if (confirm("delte sentence id "+key+"?")) {
+  if (confirm("delte sentence?")) {
     liveLog("removeSentence ('"+key+"')");
     firebase.database().ref(DB_REF+key).remove();
   }
@@ -122,7 +139,7 @@ function removeSentence (key) {
 function parseSentencesData(firebaseObj) {
   var nodes = new Array();
   angular.forEach(firebaseObj, function(value, key) {
-    console.log(value);
+    //console.log(value);
     value.key = key;
     nodes.push(value);
   });
@@ -167,11 +184,43 @@ function searchFilter($scope, item){
   return false;
 }
 
+
+function parseGlobalSentencesData(firebaseObj) {
+  global_sentences = new Array();
+  angular.forEach(firebaseObj, function(object, keyy) {
+    angular.forEach(object, function(level_sentences, level) {
+      //console.log(level_sentences);
+      angular.forEach(level_sentences, function(value, k){
+        //console.log(value);
+        value.key = k;
+        value["level"] = level;
+        global_sentences.push(value);
+      });
+    });
+  });
+
+  //console.log(global_sentences);
+}
+function pullGlobalSentencesData($scope, $firebaseObject) {
+
+
+  var ref = new Firebase(config.databaseURL+"/sentences/");
+  var firebaseObj = $firebaseObject(ref);
+
+  firebaseObj.$watch(function() {
+    parseGlobalSentencesData(firebaseObj);
+  });
+
+  return true;
+}
+
 var databaseViewController = function($scope, $firebaseObject) {
   //liveLog("pulling data from firebase");
   pullSentencesDataByLevel($scope,$firebaseObject);
   $scope.levelValue = "all";
   $scope.list_length = 0;
+
+  pullGlobalSentencesData($scope, $firebaseObject);
 
   $scope.onLevelChange = function(){
     pullSentencesDataByLevel($scope.levelValue, $scope,$firebaseObject);
@@ -245,7 +294,7 @@ var sentenceSubmitController = function($scope) {
   }
 
   $scope.addToMainDB = function(target) {
-    console.log(target.node);
+    //console.log(target.node);
 
     var targetLevel = prompt("sentence:\n\""+target.node.sentence+"\"\nWhich level?");
 
@@ -263,13 +312,13 @@ var sentenceSubmitController = function($scope) {
   }
 
   $scope.addAllToMainDB = function() {
-    console.log("addAllToMainDB()");
-    console.log($scope.data);
+    //console.log("addAllToMainDB()");
+    //console.log($scope.data);
     var sentences = $scope.data.slice();
     var targetLevel = prompt("Which level?");
 
     for (var i=0; i<sentences.length; ++i) {
-      console.log(sentences[i]);
+      //console.log(sentences[i]);
       var err = addToMainDB(targetLevel, sentences[i].sentence, sentences[i].key);
       if (err == -1) {
         liveLog("addToMainDB(): failed to validate input.");
@@ -278,18 +327,18 @@ var sentenceSubmitController = function($scope) {
         $scope.sentence="";
       }
       else {
+        alert("sentence "+sentences[i].sentence+"successfully added to main DB");
       }
     }
 
-    alert("sentences successfully added to main DB");
   }
 
   $scope.batchUpload = function() {
-    console.log("uploading to test sentences table");
+    //console.log("uploading to test sentences table");
     var file = document.getElementById('inputFile').files[0];
     var file_reader = new FileReader();
     //console.log(file_reader);
-    console.log(file.type);
+    //console.log(file.type);
     if (!file.type=="text/plain") {
       liveLog("ERROR: .txt file required! ");
       return;
@@ -299,9 +348,9 @@ var sentenceSubmitController = function($scope) {
     function receivedText(e) {
       try {
         lines = e.target.result.split("\n");
-        console.log(lines);
+        //console.log(lines);
         for (var i=0; i<lines.length; ++i) {
-          console.log(lines[i]);
+          //console.log(lines[i]);
           if (lines[i]=="") {
             continue;
           }
