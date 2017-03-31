@@ -90,8 +90,8 @@ function addSentence(input_level, input_sentence, update_target, $firebaseObject
   // check for duplicate
   var duplicateExists = false;
   if (!update_target && global_sentences) {
-    console.log(input_level);
-    console.log(global_sentences);
+    //console.log(input_level);
+    //console.log(global_sentences);
     for (var i=0; i<global_sentences.length; ++i) {
       if (global_sentences[i].sentence.trim() == input_sentence.trim() && global_sentences[i].level == input_level) {
         duplicateExists = true;
@@ -133,12 +133,22 @@ function updateSentence(node, input_level, input_sentence, $firebaseObject) {
   }
   input_level = Math.floor(input_level);
 
-  console.log(node);
+  //console.log(node);
+  //console.log(global_sentences);
+  original_level = 1;
+  for (var i=0; i<global_sentences.length; ++i) {
+    if (global_sentences[i].key==node.key) {
+      //console.log(i);
+      //console.log(global_sentences[i]);
+      original_level = global_sentences[i].level;
+      //console.log("moving from level "+original_level+"to "+input_level);
+    }
+  }
 
   // remove old node
-  for (var i=1; i<10; ++i) {
-    firebase.database().ref(DB_REF + i+"/"+node.key).remove();
-  }
+  //for (var i=1; i<10; ++i) {
+  firebase.database().ref(DB_REF + original_level+"/"+node.key).remove();
+  //}
   // add updated node
   addSentence(input_level, input_sentence, node, $firebaseObject);
   return 0;
@@ -180,19 +190,22 @@ function removeSentence (level, target_key, $firebaseObject) {
   parse raw firebaseObj into angularjs-repeat tag consumable array form
 */
 function parseSentencesData(level_input, firebaseObj) {
+  //console.log("parseSentencesData()");
   var nodes = new Array();
   global_sentences = new Array();
+  var global_temp = new Array();
   angular.forEach(firebaseObj, function(level_sentences, level) {
     //console.log(level_sentences);
     angular.forEach(level_sentences, function(value, k){
       value.key = k;
       value["level"] = level;
-      global_sentences.push(value);
+      global_temp.push(JSON.parse(JSON.stringify(value)));
       if (level == level_input || level_input=="all") {
         nodes.push(value);
       }
     });
   });
+  global_sentences = global_temp.slice();
   return nodes;
 }
 
@@ -265,6 +278,8 @@ var databaseViewController = function($scope, $firebaseObject) {
   }
 
   $scope.update = function(node, level, sentence) {
+    console.log("update()");
+    console.log(global_sentences);
     if (updateSentence(node, level, sentence, $firebaseObject)) {
       liveLog("updateSentence(): failed to validate input.");
     }
