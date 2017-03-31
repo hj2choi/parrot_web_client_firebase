@@ -167,7 +167,7 @@
     								<td><input style="width:100%;" type="text" ng-model="node.sentence" value={{node.sentence}} ng-change="update(node, node.level, node.sentence)" ng-model-options="{debounce:1500}"></input></td>
     								<td class="center">{{node.used}}</td>
     								<td class="center">{{node.correct}}</td>
-                    <td class="center">{{(node.accuracy*100)+"%"}}</td>
+                    <td class="center">{{(node.accuracy)+"%"}}</td>
                     <td class="center">
                       <!--<button ng-click="update(node, node.level, node.sentence)">update</button>
                       <span style="margin-left:15px;"></span>-->

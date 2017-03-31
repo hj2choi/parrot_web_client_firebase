@@ -21,7 +21,7 @@ var settingsController = function($scope, $firebaseObject) {
   $scope.resetSettings = function() {
     console.log("resetSettings()");
     console.log($scope.settings);
-    $scope.settings.accuracy_pass = 0.7;
+    $scope.settings.accuracy_pass = 70;
     $scope.settings.level_num_check = 5;
     $scope.settings.level_num_pass = 3;
     $scope.settings.player_max_num = 5;
@@ -30,7 +30,7 @@ var settingsController = function($scope, $firebaseObject) {
   $scope.saveSettings = function() {
     console.log("saveSettings");
     console.log($scope.settings);
-    if (parseFloat($scope.settings.accuracy_pass)>0 && parseFloat($scope.settings.accuracy_pass)<1) {
+    if (parseFloat($scope.settings.accuracy_pass)>0 && parseFloat($scope.settings.accuracy_pass)<=100) {
       if (parseInt($scope.settings.level_num_check)>=1 && parseInt($scope.settings.level_num_pass)>=1 && parseInt($scope.settings.player_max_num)>=1) {
         console.log("passed validation");
         firebase.database().ref(DB_REF+"accuracy_pass/").set(parseFloat($scope.settings.accuracy_pass));
