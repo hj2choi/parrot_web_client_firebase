@@ -122,6 +122,13 @@
                   </div>
                 </div></br>
 
+                <div class="row">
+                  <label for="input" class="col-sm-2 control-label">max_level</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="max_level" placeholder="1 ~" ng-model="settings.max_level" value="{{settings.max_level}}"></input>
+                  </div>
+                </div></br>
+
                 <span>
                   <button type="submit" class="btn btn-warning" id="addSentences" ng-click="resetSettings()">reset to default</button>
                   <button type="submit" class="btn btn-primary" id="addSentences" ng-click="saveSettings()">save current settings</button>
