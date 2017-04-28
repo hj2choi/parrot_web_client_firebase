@@ -50,7 +50,7 @@ var settingsController = function($scope, $firebaseObject) {
         firebase.database().ref(DB_REF+"player_max_num/").set(parseFloat($scope.settings.player_max_num));
         firebase.database().ref(DB_REF+"max_level/").set(parseFloat($scope.settings.max_level));
         $scope.error_msg = "Successfully saved current settings";
-        window.location.reload();
+        //window.location.reload();
         return;
       }
     }
