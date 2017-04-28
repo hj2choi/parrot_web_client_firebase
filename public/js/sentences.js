@@ -288,6 +288,11 @@ var databaseViewController = function($scope, $firebaseObject) {
   $scope.remove = function(node) {
     removeSentence(node.level, node.key, $firebaseObject);
   }
+
+  $scope.parseInt = function(val) {
+    return parseInt(val);
+  }
+
   $scope.searchLevelValue = "1";
 }
 
