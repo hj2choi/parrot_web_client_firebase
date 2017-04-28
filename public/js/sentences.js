@@ -296,10 +296,16 @@ var sentencesSortFilter = function(input, optional1, optional2) {
     return input
   }
   input.sort(function(a,b) {
-    if (a[SORT_LIST[sort_col]]>b[SORT_LIST[sort_col]]) {
+    a_element = a[SORT_LIST[sort_col]];
+    b_element = b[SORT_LIST[sort_col]];
+    if (sort_col != 1) {
+      a_element = parseInt(a_element);
+      b_element = parseInt(b_element);
+    }
+    if (a_element>b_element) {
       return sort_ascending_order?1:-1;
     }
-    if (a[SORT_LIST[sort_col]]<b[SORT_LIST[sort_col]]) {
+    if (a_element<b_element) {
       return sort_ascending_order?-1:1;
     }
     return 0;
